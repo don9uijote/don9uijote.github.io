@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/static/css/all.min.css">
+<link rel="stylesheet" href="/static/css/animate.min.css">
+
+<script src="/static/js/anime.min.js"></script>
+<script src="/static/js/search.js"></script>
+
+
+
+
+  
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"iwiz.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一、使用的软件版本及需求说明软件版本  Apache 2.4.39 PHP 5.6.9 MySQL 5.7 Oracle 11g ThinkPHP 5.0  需求说明 当前项目中为PHP+MySQL结构，在后续的开发中需要加入对Oracle数据库的操作，所以需要项目可以同时连接操作MySQL和Oracle数据库，MySQL为原有默认操作，在需要操作Oracle库时临时切换数据库连接。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次ThinkPHP5配置MySQL+Oracle多数据库连接遇到的坑">
+<meta property="og:url" content="https://iwiz.top/article/2024/08/fbd6fd751ab3.html">
+<meta property="og:site_name" content="Q&#39;s Garret">
+<meta property="og:description" content="一、使用的软件版本及需求说明软件版本  Apache 2.4.39 PHP 5.6.9 MySQL 5.7 Oracle 11g ThinkPHP 5.0  需求说明 当前项目中为PHP+MySQL结构，在后续的开发中需要加入对Oracle数据库的操作，所以需要项目可以同时连接操作MySQL和Oracle数据库，MySQL为原有默认操作，在需要操作Oracle库时临时切换数据库连接。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-27T13:26:00.000Z">
+<meta property="article:modified_time" content="2024-12-15T03:40:54.367Z">
+<meta property="article:author" content="Mr.Q">
+<meta property="article:tag" content="Oracle">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="ThinkPHP">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://iwiz.top/article/2024/08/fbd6fd751ab3.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://iwiz.top/article/2024/08/fbd6fd751ab3.html","path":"article/2024/08/fbd6fd751ab3.html","title":"记一次ThinkPHP5配置MySQL+Oracle多数据库连接遇到的坑"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>记一次ThinkPHP5配置MySQL+Oracle多数据库连接遇到的坑 | Q's Garret</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Q's Garret</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Who Am I?</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-collects"><a href="/collects/" rel="section"><i class="fa fa-star fa-fw"></i>收藏</a></li><li class="menu-item menu-item-applications"><a href="/applications/" rel="section"><i class="fa fa-flask fa-fw"></i>小程序</a></li><li class="menu-item menu-item-links"><a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>链接</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%BD%BF%E7%94%A8%E7%9A%84%E8%BD%AF%E4%BB%B6%E7%89%88%E6%9C%AC%E5%8F%8A%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">一、使用的软件版本及需求说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81PHP%E9%85%8D%E7%BD%AEOracle%E6%94%AF%E6%8C%81%E6%89%A9%E5%B1%95"><span class="nav-number">2.</span> <span class="nav-text">二、PHP配置Oracle支持扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E5%87%86%E5%A4%87%E9%9C%80%E8%A6%81%E7%9A%84%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">1、准备需要的文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E5%B0%86%E5%AF%B9%E5%BA%94%E6%96%87%E4%BB%B6%E6%94%BE%E5%9C%A8%E5%AF%B9%E5%BA%94%E4%BD%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">2、将对应文件放在对应位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E5%9C%A8PHP%E4%B8%AD%E9%85%8D%E7%BD%AE%E6%89%A9%E5%B1%95"><span class="nav-number">2.3.</span> <span class="nav-text">3、在PHP中配置扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E6%A3%80%E6%9F%A5%E6%89%A9%E5%B1%95%E5%8A%A0%E8%BD%BD%E6%98%AF%E5%90%A6%E6%88%90%E5%8A%9F"><span class="nav-number">2.4.</span> <span class="nav-text">4、检查扩展加载是否成功</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91%E5%8F%8A%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">三、遇到的一些坑及解决过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81ThinkPHP5-0%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E7%AC%AC%E4%BA%8C%E4%B8%AAOracle%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">1、ThinkPHP5.0如何配置第二个Oracle数据库？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E6%8F%90%E7%A4%BA%E6%89%BE%E4%B8%8D%E5%88%B0Oracle%E6%96%B9%E6%B3%95%E7%B1%BB"><span class="nav-number">3.2.</span> <span class="nav-text">2、提示找不到Oracle方法类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E5%90%84%E7%A7%8D%E6%8F%90%E7%A4%BAOCI%E6%89%A9%E5%B1%95%E5%8A%A0%E8%BD%BD%E5%A4%B1%E8%B4%A5%E7%9A%84%E5%8F%AF%E8%83%BD%E5%8E%9F%E5%9B%A0%E5%92%8C%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">3、各种提示OCI扩展加载失败的可能原因和解决办法</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr.Q"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr.Q</p>
+  <div class="site-description" itemprop="description">I Don't Know!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://iwiz.top/article/2024/08/fbd6fd751ab3.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr.Q">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Q's Garret">
+      <meta itemprop="description" content="I Don't Know!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="记一次ThinkPHP5配置MySQL+Oracle多数据库连接遇到的坑 | Q's Garret">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          记一次ThinkPHP5配置MySQL+Oracle多数据库连接遇到的坑
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-08-27 13:26:00" itemprop="dateCreated datePublished" datetime="2024-08-27T13:26:00+00:00">2024-08-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-12-15 03:40:54" itemprop="dateModified" datetime="2024-12-15T03:40:54+00:00">2024-12-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E5%8F%91-%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">开发&技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="一、使用的软件版本及需求说明"><a href="#一、使用的软件版本及需求说明" class="headerlink" title="一、使用的软件版本及需求说明"></a>一、使用的软件版本及需求说明</h1><p><strong>软件版本</strong></p>
+<ul>
+<li>Apache 2.4.39</li>
+<li>PHP 5.6.9</li>
+<li>MySQL 5.7</li>
+<li>Oracle 11g</li>
+<li>ThinkPHP 5.0</li>
+</ul>
+<p><strong>需求说明</strong></p>
+<p>当前项目中为PHP+MySQL结构，在后续的开发中需要加入对Oracle数据库的操作，所以需要项目可以同时连接操作MySQL和Oracle数据库，MySQL为原有默认操作，在需要操作Oracle库时临时切换数据库连接。</p>
+<span id="more"></span>
+
+<h1 id="二、PHP配置Oracle支持扩展"><a href="#二、PHP配置Oracle支持扩展" class="headerlink" title="二、PHP配置Oracle支持扩展"></a>二、PHP配置Oracle支持扩展</h1><h2 id="1、准备需要的文件"><a href="#1、准备需要的文件" class="headerlink" title="1、准备需要的文件"></a>1、准备需要的文件</h2><p>下载Oracle客户端支持库</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.oracle.com/database/technologies/instant-client/downloads.html">https://www.oracle.com/database/technologies/instant-client/downloads.html</a></p>
+</blockquote>
+<p>下载PHPOracle支持扩展文件</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://pecl.php.net/package/oci8">http://pecl.php.net/package/oci8</a></p>
+</blockquote>
+<h2 id="2、将对应文件放在对应位置"><a href="#2、将对应文件放在对应位置" class="headerlink" title="2、将对应文件放在对应位置"></a>2、将对应文件放在对应位置</h2><p>将客户端文件中的<code>oci.dll</code>文件放入<code>C:\Windows\System32</code>目录中，将PHP扩展文件<code>php_oci8.dll</code>放入PHP安装目录的<code>\ext</code>目录下</p>
+<h2 id="3、在PHP中配置扩展"><a href="#3、在PHP中配置扩展" class="headerlink" title="3、在PHP中配置扩展"></a>3、在PHP中配置扩展</h2><p>打开<code>php.ini</code>文件，在其中加入如下内容，然后重启Apache服务</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">extension=php_oci8.dll</span><br><span class="line">extension=php_pdo_oci.dll # 此文件为PHP安装包内自带</span><br></pre></td></tr></table></figure>
+
+<p>注：如果以上配置存在，则将前面的“;”注释符号去掉即可</p>
+<h2 id="4、检查扩展加载是否成功"><a href="#4、检查扩展加载是否成功" class="headerlink" title="4、检查扩展加载是否成功"></a>4、检查扩展加载是否成功</h2><p>使用<code>phpinfo()</code>查看扩展加载情况，检查<code>OCI8</code>和<code>PDO_OCI</code>吃否成功显示</p>
+<h1 id="三、遇到的一些坑及解决过程"><a href="#三、遇到的一些坑及解决过程" class="headerlink" title="三、遇到的一些坑及解决过程"></a>三、遇到的一些坑及解决过程</h1><h2 id="1、ThinkPHP5-0如何配置第二个Oracle数据库？"><a href="#1、ThinkPHP5-0如何配置第二个Oracle数据库？" class="headerlink" title="1、ThinkPHP5.0如何配置第二个Oracle数据库？"></a>1、ThinkPHP5.0如何配置第二个Oracle数据库？</h2><p>可在config.php中添加如下配置</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Oracle数据库配置</span></span><br><span class="line"><span class="string">&#x27;oracle&#x27;</span>     =&gt; [</span><br><span class="line">    <span class="string">&#x27;type&#x27;</span>            =&gt; <span class="string">&#x27;\think\oracle\Connection&#x27;</span>, <span class="comment">// 数据库类型</span></span><br><span class="line">    <span class="string">&#x27;hostname&#x27;</span>        =&gt; <span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="comment">// 服务器地址</span></span><br><span class="line">    <span class="string">&#x27;database&#x27;</span>        =&gt; <span class="string">&#x27;dbname&#x27;</span>, <span class="comment">// 数据库名</span></span><br><span class="line">    <span class="string">&#x27;username&#x27;</span>        =&gt; <span class="string">&#x27;username&#x27;</span>, <span class="comment">// 用户名</span></span><br><span class="line">    <span class="string">&#x27;password&#x27;</span>        =&gt; <span class="string">&#x27;password&#x27;</span>, <span class="comment">// 密码</span></span><br><span class="line">    <span class="string">&#x27;hostport&#x27;</span>        =&gt; <span class="string">&#x27;1521&#x27;</span>, <span class="comment">// 端口</span></span><br><span class="line">    <span class="comment">// 其他的数据库连接参数...</span></span><br><span class="line">    <span class="string">&#x27;charset&#x27;</span>         =&gt; <span class="string">&#x27;zhs16gbk&#x27;</span>, <span class="comment">// 字符集</span></span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
+<p>默认情况仍使用MySQL数据库，需要调用Oracle数据库是使用如下语句</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Db</span>::<span class="title function_ invoke__">connect</span>(<span class="title function_ invoke__">config</span>(<span class="string">&#x27;oracle&#x27;</span>))-&gt;<span class="title function_ invoke__">query</span>(<span class="string">&#x27;SQL语句&#x27;</span>, [], <span class="literal">false</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、提示找不到Oracle方法类"><a href="#2、提示找不到Oracle方法类" class="headerlink" title="2、提示找不到Oracle方法类"></a>2、提示找不到Oracle方法类</h2><blockquote>
+<p>Class ‘\think\oracle\Connection’ not found</p>
+</blockquote>
+<p>原因是ThinkPHP5.0中默认不包含Oracle支持类，需要下载后手动加入扩展</p>
+<blockquote>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/HelloWuJiaYi/SiteEncrypt">https://github.com/HelloWuJiaYi/SiteEncrypt</a></p>
+</blockquote>
+<p>其中有3.0、2.0和master三个版本，需要根据ThinkPHP的版本下载对应的版本，ThinkPHP5.0下载的是master这个。下载后将文件夹名改为oracle，并放置在<code>.\thinkphp\library\think</code>目录下后，即可成功调用Oracle方法类。</p>
+<h2 id="3、各种提示OCI扩展加载失败的可能原因和解决办法"><a href="#3、各种提示OCI扩展加载失败的可能原因和解决办法" class="headerlink" title="3、各种提示OCI扩展加载失败的可能原因和解决办法"></a>3、各种提示OCI扩展加载失败的可能原因和解决办法</h2><ol>
+<li>Oracle客户端、OCI扩展支持与PHP版本不匹配，下载到错误的文件版本</li>
+<li>缺少相关文件，可将下载的<strong>Oracle客户端支持库</strong>文件夹下的dll文件都拷贝到<code>system32目录下</code>，一般就可以解决</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+              <a href="/tags/PHP/" rel="tag"># PHP</a>
+              <a href="/tags/ThinkPHP/" rel="tag"># ThinkPHP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/article/2024/05/fd9ad07f41f7.html" rel="prev" title="【BILIBILI】我们搞到了58年前的报纸，只为一探九龙城寨真相？">
+                  <i class="fa fa-chevron-left"></i> 【BILIBILI】我们搞到了58年前的报纸，只为一探九龙城寨真相？
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/article/2024/10/2f4a2a49f42a.html" rel="next" title="Oracle11g 通过SQL语句创建表空间方法">
+                  Oracle11g 通过SQL语句创建表空间方法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Q</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

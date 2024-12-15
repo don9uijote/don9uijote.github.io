@@ -1,0 +1,813 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Kali 设置默认启动文本模式</title>
+    <url>/article/2024/11/1baa67192d14.html</url>
+    <content><![CDATA[<h1 id="1、设置默认启动命令行模式"><a href="#1、设置默认启动命令行模式" class="headerlink" title="1、设置默认启动命令行模式"></a>1、设置默认启动命令行模式</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl set-default multi-user.target</span><br></pre></td></tr></table></figure>
+
+<h1 id="2、设置默认启动图形界面"><a href="#2、设置默认启动图形界面" class="headerlink" title="2、设置默认启动图形界面"></a>2、设置默认启动图形界面</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl set-default graphical.target</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>网络&amp;安全</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Kali</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Oracle11g 通过SQL语句创建表空间方法</title>
+    <url>/article/2024/10/2f4a2a49f42a.html</url>
+    <content><![CDATA[<ol>
+<li>创建临时表空间</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> temporary tablespace 自定义_temp </span><br><span class="line">tempfile <span class="string">&#x27;D:\oracledata\自定义_temp.dbf&#x27;</span> </span><br><span class="line">size <span class="number">50</span>m  </span><br><span class="line">autoextend <span class="keyword">on</span>  </span><br><span class="line">next <span class="number">50</span>m maxsize <span class="number">20480</span>m  </span><br><span class="line">extent management <span class="keyword">local</span>; </span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<ol start="2">
+<li>创建数据表空间</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span>space 自定义_data  </span><br><span class="line">logging  </span><br><span class="line">datafile <span class="string">&#x27;D:\oracledata\自定义_data.dbf&#x27;</span> </span><br><span class="line">size <span class="number">50</span>m  </span><br><span class="line">autoextend <span class="keyword">on</span>  </span><br><span class="line">next <span class="number">50</span>m maxsize <span class="number">20480</span>m  </span><br><span class="line">extent management <span class="keyword">local</span>;  </span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>创建用户并指定表空间</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">user</span> 自定义用户名 identified <span class="keyword">by</span> 自定义用户密码  </span><br><span class="line"><span class="keyword">default</span> tablespace 自定义表名_data  </span><br><span class="line">temporary tablespace 自定义表名_temp;  </span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>给用户授予权限</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">grant</span> <span class="keyword">connect</span>,resource,dba <span class="keyword">to</span> 自定义用户名;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Oracle</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记一次ThinkPHP5配置MySQL+Oracle多数据库连接遇到的坑</title>
+    <url>/article/2024/08/fbd6fd751ab3.html</url>
+    <content><![CDATA[<h1 id="一、使用的软件版本及需求说明"><a href="#一、使用的软件版本及需求说明" class="headerlink" title="一、使用的软件版本及需求说明"></a>一、使用的软件版本及需求说明</h1><p><strong>软件版本</strong></p>
+<ul>
+<li>Apache 2.4.39</li>
+<li>PHP 5.6.9</li>
+<li>MySQL 5.7</li>
+<li>Oracle 11g</li>
+<li>ThinkPHP 5.0</li>
+</ul>
+<p><strong>需求说明</strong></p>
+<p>当前项目中为PHP+MySQL结构，在后续的开发中需要加入对Oracle数据库的操作，所以需要项目可以同时连接操作MySQL和Oracle数据库，MySQL为原有默认操作，在需要操作Oracle库时临时切换数据库连接。</p>
+<span id="more"></span>
+
+<h1 id="二、PHP配置Oracle支持扩展"><a href="#二、PHP配置Oracle支持扩展" class="headerlink" title="二、PHP配置Oracle支持扩展"></a>二、PHP配置Oracle支持扩展</h1><h2 id="1、准备需要的文件"><a href="#1、准备需要的文件" class="headerlink" title="1、准备需要的文件"></a>1、准备需要的文件</h2><p>下载Oracle客户端支持库</p>
+<blockquote>
+<p><a href="https://www.oracle.com/database/technologies/instant-client/downloads.html">https://www.oracle.com/database/technologies/instant-client/downloads.html</a></p>
+</blockquote>
+<p>下载PHPOracle支持扩展文件</p>
+<blockquote>
+<p><a href="http://pecl.php.net/package/oci8">http://pecl.php.net/package/oci8</a></p>
+</blockquote>
+<h2 id="2、将对应文件放在对应位置"><a href="#2、将对应文件放在对应位置" class="headerlink" title="2、将对应文件放在对应位置"></a>2、将对应文件放在对应位置</h2><p>将客户端文件中的<code>oci.dll</code>文件放入<code>C:\Windows\System32</code>目录中，将PHP扩展文件<code>php_oci8.dll</code>放入PHP安装目录的<code>\ext</code>目录下</p>
+<h2 id="3、在PHP中配置扩展"><a href="#3、在PHP中配置扩展" class="headerlink" title="3、在PHP中配置扩展"></a>3、在PHP中配置扩展</h2><p>打开<code>php.ini</code>文件，在其中加入如下内容，然后重启Apache服务</p>
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">extension=php_oci8.dll</span><br><span class="line">extension=php_pdo_oci.dll # 此文件为PHP安装包内自带</span><br></pre></td></tr></table></figure>
+
+<p>注：如果以上配置存在，则将前面的“;”注释符号去掉即可</p>
+<h2 id="4、检查扩展加载是否成功"><a href="#4、检查扩展加载是否成功" class="headerlink" title="4、检查扩展加载是否成功"></a>4、检查扩展加载是否成功</h2><p>使用<code>phpinfo()</code>查看扩展加载情况，检查<code>OCI8</code>和<code>PDO_OCI</code>吃否成功显示</p>
+<h1 id="三、遇到的一些坑及解决过程"><a href="#三、遇到的一些坑及解决过程" class="headerlink" title="三、遇到的一些坑及解决过程"></a>三、遇到的一些坑及解决过程</h1><h2 id="1、ThinkPHP5-0如何配置第二个Oracle数据库？"><a href="#1、ThinkPHP5-0如何配置第二个Oracle数据库？" class="headerlink" title="1、ThinkPHP5.0如何配置第二个Oracle数据库？"></a>1、ThinkPHP5.0如何配置第二个Oracle数据库？</h2><p>可在config.php中添加如下配置</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Oracle数据库配置</span></span><br><span class="line"><span class="string">&#x27;oracle&#x27;</span>     =&gt; [</span><br><span class="line">    <span class="string">&#x27;type&#x27;</span>            =&gt; <span class="string">&#x27;\think\oracle\Connection&#x27;</span>, <span class="comment">// 数据库类型</span></span><br><span class="line">    <span class="string">&#x27;hostname&#x27;</span>        =&gt; <span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="comment">// 服务器地址</span></span><br><span class="line">    <span class="string">&#x27;database&#x27;</span>        =&gt; <span class="string">&#x27;dbname&#x27;</span>, <span class="comment">// 数据库名</span></span><br><span class="line">    <span class="string">&#x27;username&#x27;</span>        =&gt; <span class="string">&#x27;username&#x27;</span>, <span class="comment">// 用户名</span></span><br><span class="line">    <span class="string">&#x27;password&#x27;</span>        =&gt; <span class="string">&#x27;password&#x27;</span>, <span class="comment">// 密码</span></span><br><span class="line">    <span class="string">&#x27;hostport&#x27;</span>        =&gt; <span class="string">&#x27;1521&#x27;</span>, <span class="comment">// 端口</span></span><br><span class="line">    <span class="comment">// 其他的数据库连接参数...</span></span><br><span class="line">    <span class="string">&#x27;charset&#x27;</span>         =&gt; <span class="string">&#x27;zhs16gbk&#x27;</span>, <span class="comment">// 字符集</span></span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
+<p>默认情况仍使用MySQL数据库，需要调用Oracle数据库是使用如下语句</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title class_">Db</span>::<span class="title function_ invoke__">connect</span>(<span class="title function_ invoke__">config</span>(<span class="string">&#x27;oracle&#x27;</span>))-&gt;<span class="title function_ invoke__">query</span>(<span class="string">&#x27;SQL语句&#x27;</span>, [], <span class="literal">false</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、提示找不到Oracle方法类"><a href="#2、提示找不到Oracle方法类" class="headerlink" title="2、提示找不到Oracle方法类"></a>2、提示找不到Oracle方法类</h2><blockquote>
+<p>Class ‘\think\oracle\Connection’ not found</p>
+</blockquote>
+<p>原因是ThinkPHP5.0中默认不包含Oracle支持类，需要下载后手动加入扩展</p>
+<blockquote>
+<p>下载地址：<a href="https://github.com/HelloWuJiaYi/SiteEncrypt">https://github.com/HelloWuJiaYi/SiteEncrypt</a></p>
+</blockquote>
+<p>其中有3.0、2.0和master三个版本，需要根据ThinkPHP的版本下载对应的版本，ThinkPHP5.0下载的是master这个。下载后将文件夹名改为oracle，并放置在<code>.\thinkphp\library\think</code>目录下后，即可成功调用Oracle方法类。</p>
+<h2 id="3、各种提示OCI扩展加载失败的可能原因和解决办法"><a href="#3、各种提示OCI扩展加载失败的可能原因和解决办法" class="headerlink" title="3、各种提示OCI扩展加载失败的可能原因和解决办法"></a>3、各种提示OCI扩展加载失败的可能原因和解决办法</h2><ol>
+<li>Oracle客户端、OCI扩展支持与PHP版本不匹配，下载到错误的文件版本</li>
+<li>缺少相关文件，可将下载的<strong>Oracle客户端支持库</strong>文件夹下的dll文件都拷贝到<code>system32目录下</code>，一般就可以解决</li>
+</ol>
+]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Oracle</tag>
+        <tag>PHP</tag>
+        <tag>ThinkPHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【BILIBILI】我们搞到了58年前的报纸，只为一探九龙城寨真相？</title>
+    <url>/article/2024/05/fd9ad07f41f7.html</url>
+    <content><![CDATA[<!-- more -->
+
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=544900898&bvid=BV1Ti4y1N7wD&cid=318721609&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="800" height="550"></iframe>]]></content>
+      <categories>
+        <category>随笔&amp;杂谈</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>科幻作品</title>
+    <url>/article/2024/05/5e8ca5a945ce.html</url>
+    <content><![CDATA[<h1 id="小说"><a href="#小说" class="headerlink" title="小说"></a>小说</h1><p>银河帝国——美国作家艾萨克·阿西莫夫的经典科幻小说</p>
+<p>三体——刘慈欣创作的系列小说</p>
+<p>流浪地球——刘慈欣创作的中篇科幻小说</p>
+<p>弗兰肯斯坦——玛丽·雪莱创作长篇小说</p>
+<p>北京折叠——郝景芳创作中篇小说</p>
+<p>神经漫游者——1999年上海科技教育出版社出版的图书</p>
+<p>仿生人会梦见电子羊吗？——1968年译林出版社出版的图书</p>
+<span id="more"></span>
+
+<h1 id="动漫"><a href="#动漫" class="headerlink" title="动漫"></a>动漫</h1><p>铳梦——木城雪户著作的漫画</p>
+<p>攻壳机动队——士郎正宗创作漫画及衍生作品</p>
+<p>阿基拉——日本1988年大友克洋执导动画</p>
+<h1 id="影视"><a href="#影视" class="headerlink" title="影视"></a>影视</h1><p>三体——2023年杨磊执导的电视剧</p>
+<p>2001太空漫游——美国1968年斯坦利库布里克执导的科幻电影</p>
+<p>流浪地球——2019年郭帆执导的电影</p>
+<p>流浪地球2——2023年郭帆执导的电影</p>
+<p>月球旅行记——法国1902年乔治·梅里爱执导的电影</p>
+<p>银翼杀手——美国1982年雷德利·斯科特执导的动作科幻片</p>
+<p>银翼杀手2049——2017年瑞恩·高斯林等主演的科幻动作片</p>
+<p>特警判官——1995年西尔维斯特·史泰龙主演电影</p>
+<p>宇宙探索编辑部——2023年孔大山执导的电影</p>
+<p>第五元素——法国1997年吕克·贝松执导动作片</p>
+<p>我，机器人——美国2004年威尔·史密斯主演科幻电影</p>
+<p>新特警判官——2012年彼得·特拉维斯执导电影</p>
+]]></content>
+      <categories>
+        <category>随笔&amp;杂谈</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Ruoyi 添加 Filter 过滤器并在页面控制器之前执行验证程序</title>
+    <url>/article/2024/05/05b30e1eaf14.html</url>
+    <content><![CDATA[<h1 id="引入需要用到的依赖包"><a href="#引入需要用到的依赖包" class="headerlink" title="引入需要用到的依赖包"></a>引入需要用到的依赖包</h1><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.guava<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>guava<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>11.0.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>在 com &gt; ruoyi &gt; framework &gt; ShiroConfig.java 的 shiroFilterFactoryBean 方法中配置原有过滤器放行策略</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">filterChainDefinitionMap.put(<span class="string">&quot;/api/**&quot;</span>, <span class="string">&quot;anon&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="任意位置创建-Filter-过滤器"><a href="#任意位置创建-Filter-过滤器" class="headerlink" title="任意位置创建 Filter 过滤器"></a>任意位置创建 Filter 过滤器</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.PrintWriter;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BaseFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">        Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> ((HttpServletRequest)servletRequest).getRequestURI();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(url != <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="comment">// 登录请求直接放行</span></span><br><span class="line">                <span class="keyword">if</span>(<span class="string">&quot;/api/login&quot;</span>.equals(url)) &#123;</span><br><span class="line">                    filterChain.doFilter(servletRequest, servletResponse);</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="comment">//其他请求验证流程</span></span><br><span class="line">                    <span class="type">String</span> <span class="variable">license</span> <span class="operator">=</span> ((HttpServletRequest)servletRequest).getHeader(<span class="string">&quot;license&quot;</span>);</span><br><span class="line">                    <span class="keyword">if</span>(<span class="string">&quot;&quot;</span>.equals(license)) &#123; <span class="comment">// 验证成功放行(判断自行修改)</span></span><br><span class="line"></span><br><span class="line">                        <span class="comment">// 传递自定义数据</span></span><br><span class="line">                        servletRequest.setAttribute(<span class="string">&quot;data&quot;</span>, <span class="string">&quot;数据&quot;</span>);</span><br><span class="line">                        filterChain.doFilter(servletRequest,servletResponse);</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> &#123; <span class="comment">// 验证失败返回失败信息</span></span><br><span class="line">                        map.put(<span class="string">&quot;code&quot;</span>, -<span class="number">1</span>);</span><br><span class="line">                        map.put(<span class="string">&quot;message&quot;</span>, <span class="string">&quot;验证失败&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>(map);</span><br><span class="line">        servletResponse.setContentType(<span class="string">&quot;application/json&quot;</span>);</span><br><span class="line">        servletResponse.setCharacterEncoding(<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">        PrintWriter pw=servletResponse.getWriter();</span><br><span class="line">        pw.write(jsonObject.toString());</span><br><span class="line">        pw.flush();</span><br><span class="line">        pw.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 com &gt; ruoyi &gt; framework &gt; FilterConfig.java 中配置过滤器方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> FilterRegistrationBean&lt;Filter&gt; <span class="title function_">baseFilter</span><span class="params">()</span>&#123;</span><br><span class="line">    FilterRegistrationBean&lt;Filter&gt; filterRegistrationBean = <span class="keyword">new</span> <span class="title class_">FilterRegistrationBean</span>();</span><br><span class="line">    filterRegistrationBean.setFilter(<span class="keyword">new</span> <span class="title class_">BaseFilter</span>()); <span class="comment">// 配置刚刚创建的过滤器</span></span><br><span class="line">    filterRegistrationBean.setUrlPatterns(Lists.newArrayList(<span class="string">&quot;/api/*&quot;</span>)); <span class="comment">// 过滤器生效路径</span></span><br><span class="line">    filterRegistrationBean.setOrder(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> filterRegistrationBean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Ruoyi</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>赛博朋克作品</title>
+    <url>/article/2024/03/2bc201a021fc.html</url>
+    <content><![CDATA[<p><strong>小说</strong><br>《仿生人会梦见电子羊吗》<br>《神经漫游者》<br>《雪崩》</p>
+<span id="more"></span>
+
+<p><strong>影视</strong><br>《赛博朋克：边缘行者》<br>《银翼杀手》<br>《银翼杀手2049》<br>《头号玩家》<br>《阿丽塔：战斗天使》</p>
+<p><strong>游戏</strong><br>《迷雾侦探》<br>《全网公敌》<br>《赛博朋克2077》</p>
+]]></content>
+      <categories>
+        <category>随笔&amp;杂谈</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>关于 html 块标签设置 display 样式后出现不明间隔问题</title>
+    <url>/article/2024/01/682a3033c64f.html</url>
+    <content><![CDATA[<h1 id="问题描述及造成原因"><a href="#问题描述及造成原因" class="headerlink" title="问题描述及造成原因"></a>问题描述及造成原因</h1><p>我们给块元素例如 div 设置 display:inline-block，会发现元素之间存在空隙。原因是所有元素都自带的 white-space 属性在起作用。默认行为就是把换行变成空格。也就是这里的间隙实际上是来自 div 和 div 之间的换行转变成空格导致的。</p>
+<span id="more"></span>
+
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>** 1. 写 div 的时候不要换行，而是紧贴着写。 **</p>
+<p>虽然可以解决问题，但如果 div 内容比较复杂，不换行格式会很难看。而且不能格式化代码。而且你自己可能都会忘记自己做过处理，因为很不明显。</p>
+<p>** 2. 设置父元素的 font-size 为 0 **</p>
+<p>属于投机取巧的办法。可以解决问题。但父元素不能有文本内容。可以包裹一个空的父元素，就为了解决这个问题。<br>但是，font-size 为 0 会被子元素继承。需要重新设置子元素的 font-size。而且会出现下面元素下移的情况。这时候，你需要给每个子元素设置 vertical-align:top; 才能解决这个问题。非常的麻烦。</p>
+<p>** 3. 使用注释换行方式 **</p>
+<p>使用 <code>&lt;!----&gt;</code> 注释的方式解决，在两个块中间添加空注释，注释中内容仅有一个换行，这时换行在注释中不会对页面产生影响，并且代码从视觉上来说结构是美观的。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">--&gt;</span><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这种方法是在网上看到一位北大的博主在自己的博客页面中使用的，真的是非常聪明。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Debug</tag>
+        <tag>HTML</tag>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一次性了解完整英国简史！</title>
+    <url>/article/2023/06/48fec46670b4.html</url>
+    <content><![CDATA[<p>前几期内容中为大家介绍了由法兰克帝国分裂而演变成的德、意、法三国历史，虽然这三个国家发端于欧洲中世纪早期，也是当今西欧大陆最主要的几个国家，但在近现代世界舞台的影响力上，这几个老牌国家却远不及大陆对岸的一个小岛国——英国。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/01.webp" alt="英国地标建筑——大本钟"></p>
+<p>英国作为工业革命的发源地，在近代靠着其强大的工业输出和殖民掠夺，一度作为历史上疆域面积最大的一个帝国而存在，成为了世界历史中不可忽视的一个国家。</p>
+<p>另外，对于很多喜欢看欧美剧的朋友们，总是绕不开剧中提到的一些历史背景，而美国好莱坞大片中许多涉及到的历史背景其实就来自于英国的历史。如果对英国历史不了解，你只能被电影中炫酷的特效所震撼到，从而失去了感悟其中内涵和寓意的乐趣。</p>
+<p>所以，咱们今天就联系那些经典的电影、美剧、英剧和小说，一起来聊聊大英帝国的历史沉浮和前世今生。</p>
+<span id="more"></span>
+
+<h1 id="英国历史的起源：七国时代和诺曼征服"><a href="#英国历史的起源：七国时代和诺曼征服" class="headerlink" title="英国历史的起源：七国时代和诺曼征服"></a>英国历史的起源：七国时代和诺曼征服</h1><p>伫立在英国索尔兹伯里平原上的壮观的巨石阵屹立千年，而对于建造了这个古老文明遗迹的那些人们，我们今天对他们几乎是一无所知。</p>
+<p>所以关于“巨石阵是谁修建的”未解之谜就成为了很多科幻题材的最爱，像什么《巨石阵灾劫》、《失落的帝国》等等都赋予了这个古老的建筑群以神秘的色彩。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/02.webp" alt="位于伦敦西南的巨石阵遗迹"></p>
+<p>关于英国确切的历史，我们今天唯一可以确定的是在公元前九世纪，凯尔特人的一支——布利吞人，来到了英伦三岛成为了今天英国人的祖先之一。今天英国所在的大不列颠岛和法国西北部的布列塔尼半岛，都是由布立吞人的名字所命名的。</p>
+<p>到了公元前55年和公元前54年，罗马共和国高卢行省总督的凯撒，两次率领麾下了罗马军团登陆大不列颠岛，然而由于种种客观因素的制约，加上布立吞人的骁勇善战，凯撒最终没能征服不列颠。</p>
+<p>真正在大不列颠岛上建立起罗马统治的，是罗马帝国第三代皇帝卡利古拉。不过罗马所占据的其实只有大不列颠岛的南部地区。</p>
+<p>后来在罗马“五贤帝”之一的哈德良在位时期，就在大不列颠岛上修建了著名的<strong>哈德良长城</strong>，作为罗马帝国不列颠尼亚行省和凯尔特蛮族之间的边界，也成为了日后英格兰和苏格兰的大致分界线。</p>
+<p>随着罗马帝国的衰败，帝国军队最终在公元407年全部撤出了大不列颠岛，放弃对这里的统治。然后三个来自欧洲大陆的日耳曼部落——盎格鲁人、撒克逊人和朱特人，迅速利用这个机会征服了今天的英格兰。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/03.webp" alt="盎格鲁-撒克逊战士"></p>
+<p>因为这三个部落在语言、文化、习俗上都比较接近，逐渐融合成为了统一的“盎格鲁-撒克逊民族”，而“英格兰”这个名字的含义就源自于“盎格鲁人之地”的意思。</p>
+<p>英国历史上著名的亚瑟王就是在这一时期领导布立吞人，抵抗盎格鲁-撒克逊人入侵的布立吞人领袖。虽然在电影《亚瑟王》中，亚瑟王作为天选之子，率领圆桌骑士们英勇抵抗入侵，并在最后建立了大不列颠王国。</p>
+<p>但真正历史上，英格兰最终还是被盎格鲁-撒克逊人征服，并在英格兰建立起了许多小王国。后来这些王国之间相互吞并，最终形成了七个较大的王国，因此这一时期也被称为<strong>七国时代</strong>。</p>
+<p>被评为21世纪最佳电视剧，拿奖拿到手软的《权力的游戏》，就是根据马丁大爷的虚空历史巨作而改编的同名美剧，其故事背景的搭建就引自于英国历史上的七国时代，剧中的维斯特洛大陆就是大不列颠岛，北境长城的原型就是上文中说到的哈德良长城。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/04.webp" alt="《权力的游戏》中的七国和英国七国时代"></p>
+<p>大约在公元七世纪末，七国之中的麦西亚率先崛起，在国王奥法的统治下，麦西亚国力达到鼎盛，成为七国之中首屈一指的强国。</p>
+<p>在奥法统治下的麦西亚不仅称霸英格兰，而且也和欧洲大陆上的政权建立了密切的关系，并且奥法还修建了著名的防御工事——<strong>奥法堤</strong>，成为了英格兰和威尔士之间的界限。</p>
+<p>奥法去世之后，麦西亚开始衰落，而英格兰的霸权也转移到了威塞克斯王国的手中。与此同时，和英格兰隔海相望的丹麦维京海盗们也开始大举入侵英格兰，甚至在英格兰东部建立起了一片被称为“丹麦法律区”的占领区。</p>
+<p>在丹麦的蚕食下，除了还在坚持抵抗的威塞克斯和只剩下残垣断壁的麦西亚之外，英格兰的其他五国最终全部被丹麦人吞并。</p>
+<p>公元878年，屡战屡败的威赛克斯王国阿尔弗雷德终于在<strong>爱丁顿战役</strong>中，一战击败了一直以来战无不胜的丹麦军队，迫使丹麦退出了威塞克斯和麦西亚西部。</p>
+<p>阿尔弗雷德因为这份功绩，获得了“伟大者”的称号，被誉为“阿尔弗雷德大帝”，成为了第一位英格兰国王，也正式建立了英国历史上的第一个王朝——<strong>威塞克斯王朝</strong>。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/05.webp" alt="阿尔弗雷德大帝"></p>
+<p>不过丹麦的势力并没有就此淡出英格兰，反而是和威塞克斯形成的东西并立的局面，甚至后来在丹麦国王克努特二世的时候，还将英格兰并入到了他那囊括丹麦、瑞典、挪威在内的<strong>北海帝国</strong>之中。</p>
+<p>但是在最终，克努特二世的儿子哈德克努特，还是选择了阿尔弗里德大王的五世孙“忏悔者”爱德华，作为自己在英格兰王位的继承人，也算是物归原主吧。</p>
+<p>经过一番波折，英格兰的王位最终回归到了威塞克斯王朝的手中，但是“忏悔者”爱德华作为一名独身主义者，虽然结了婚，但却没有留下子嗣。</p>
+<p>公元1066年，爱德华因病去世，根据一道不知是真还是假的临终遗嘱，英格兰王位传给了他的大舅哥哈罗德。</p>
+<p>这时候在和英格兰一衣带水的法国，有人对哈罗德的继位提出了异议，这个人就是爱德华的表侄——诺曼底公爵威廉一世。</p>
+<p>因为当年在丹麦人入侵而被迫流亡诺曼底的爱德华，曾寻求表哥诺曼底公爵罗伯特的帮助，许诺将来会把王位传给罗伯特的后代。后来，罗伯特的私生子威廉即位诺曼底公爵之后，爱德华和威廉也曾会晤过，并再一次重申了当年的诺言。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/06.webp" alt="“忏悔者”爱德华的葬礼"></p>
+<p>虽然今天不得而知遗嘱和许诺这二者之间谁真谁假，但根据古今历史学家们的推测，爱德华生前更倾向于将王位传给和自己有血缘关系的威廉，并且在其流亡期间爱德华已经打算做一名独身主义者，是很有可能对表哥罗贝尔做出传位许诺的。</p>
+<p>因此威廉在得知哈罗德继承王位后就开始四下招募兵马，准备入侵英格兰，用武力夺回本该属于自己的王位，而且还争取到了罗马教廷的支持和承认其夺位的合法性。</p>
+<p>在完成了这些军事和外交上的准备之后，威廉在1066年9月28日，率领一直一万两千人的大军在英格兰东南部登陆。</p>
+<p>传说，威廉刚刚从船上跳下沙滩的时候，不小心面朝沙滩扑倒在地，为了不在挥下的雇佣军面前出丑，威廉机智地用双手捧起沙子站了起来，冲着众人喊到：“你们看，我现在拥有了英格兰的土地！”</p>
+<p>其实这个故事也曾经出现在凯撒入侵不列颠的时候，不过威廉确实是幸运的。因为就在他的军队受到季风影响而被迫延迟登陆英格兰的这段时间里，同样觊觎英格兰王位的挪威国王“无情者”哈拉尔三世抢先在英格兰登陆，结果却遭遇英军的顽强抵抗，挪威军队惨败，哈拉尔自己也战死沙场。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/07.webp" alt="诺曼征服示意图"></p>
+<p>刚刚击退了挪威军队的哈罗德得知了威廉入侵的消息，立即率领疲惫不堪和伤痕累累的军队仓促南下御敌。最终，威廉的一万两千人马在<strong>黑斯廷斯战役</strong>中击败了哈罗德统帅的八千英军，消灭了英格兰的有生力量。</p>
+<p>在当年的圣诞节，威廉在伦敦的威斯敏斯特大教堂加冕登基，成为了英格兰国王威廉一世，获得了“征服者”称号，开创了英格兰<strong>诺曼王朝</strong>。</p>
+<p>“<strong>诺曼征服</strong>”也是迄今为止，历史上最后一次对不列颠岛成功的军事入侵，从此之后还一直没有人能够再次成功地征服英国。</p>
+<p>而诺曼底贵族入主英格兰极大地改变了英国历史的走向，在此后的三百年里，法语成为了英国统治阶层的通用语，也因此极大地影响了英语的发展和演变。</p>
+<p>另外诺曼贵族们，将欧洲大陆的封建等级制度和贵族文化传播到了英格兰，威廉一世开始全国彻查财产，以按财产的多寡为贵族们制定不同的封建义务，最终统计的税册被英格兰旧贵族们害怕的称之为“<strong>末日审判书</strong>”。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/08.webp" alt="“征服者”威廉"></p>
+<p>这也标志着西欧的最后一个版块大不列颠岛完成了封建化进程，因此1066年的圣诞节被历史学家们认为是欧洲中世纪早期的结束和盛期开始的分界线，也是英国作为一个封建化国家登上历史舞台的时间标志点。</p>
+<h1 id="英伦三岛之间的爱恨情仇"><a href="#英伦三岛之间的爱恨情仇" class="headerlink" title="英伦三岛之间的爱恨情仇"></a>英伦三岛之间的爱恨情仇</h1><p>威廉一世虽然成功的入主英格兰，但是“忏悔者”爱德华所属的威塞克斯家族并没有绝嗣，爱德华的侄子“显贵者”埃德加在姐姐玛格丽特的保护下逃往到了北方的苏格兰。</p>
+<p>为了能够在苏格兰获得切实的保护，玛格丽特嫁给了丧偶的苏格兰国王马尔科姆三世，就是在莎士比亚的名著《麦克白》中，最后赢得了王位的那位“马尔康王子”。</p>
+<p>为了断绝威赛克斯家族重返英格兰的念头，威廉一世亲率大军深入苏格兰腹地，连战连捷，迫使马尔科姆三世低头臣服。从此之后，苏格兰就长期处在英格兰的影响和控制之下。</p>
+<p>威廉一世去世之后，英格兰的王位先后由他的儿子威廉二世和亨利一世所继承，后来因为亨利一世的独生子意外溺水身亡，所以亨利一世就指定他的女儿法国安茹伯爵夫人玛蒂尔达为继承人。</p>
+<p>然而当亨利一世去世的时候，他从小养在身边的外甥布卢瓦伯爵斯蒂芬趁着表妹远在法国安茹，趁机篡夺了王位。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/09.webp" alt="诺曼王朝世系图"></p>
+<p>于是，斯蒂芬和玛蒂尔达之间展开了长达九年的王位争夺战，最终双方达成妥协，玛蒂尔达承认了斯蒂芬的王位，而斯蒂芬也将玛蒂尔达的儿子亨利立为继承人，就是后来的英格兰国王亨利二世。</p>
+<p>随着亨利二世的登基，英格兰的历史进入到了安茹王朝的统治时期，因为亨利二世的父亲特别喜欢在帽檐上别一朵金雀花，因此获得了一个绰号叫“金雀花”，所以安茹王朝也被称为<strong>金雀花王朝</strong>。</p>
+<p>亨利二世在位时期，爱尔兰岛上的两个蛮族小王国发生战争，亨利二世得到教皇的授权，率军登陆爱尔兰，在爱尔兰的东部建立了统治。之后的爱尔兰岛在英格兰的一步步的蚕食和殖民中，逐渐被英格兰所控制。</p>
+<p>而亨利二世的儿子就是英国历史上十分著名的“狮心王”理查，在第三次十字军东征期间，曾以少胜多击败了不可一世的萨拉丁军队，被公认为欧洲中世纪最杰出的指挥官之一。亨利二世的另外一个儿子就是签署了<strong>《自由大宪章》</strong>，推动了人类民主进程的标志性人物“无地王”约翰。</p>
+<p>金雀花王朝随着约翰的孙子“长腿”爱德华一世的登基，开始步入了鼎盛时期，爱德华一世先是通过两次威尔士战争，试图吞并威尔士，不过并不是十分的成功。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/10.webp" alt="英伦三岛"></p>
+<p>于是爱德华一世就召集了威尔士各地的贵族去跟他谈判，到场的威尔士贵族们告诉爱德华一世，他们只接受出生在威尔士，既不说法语也不说英语，道德上洁白无瑕的人做威尔士的国王。</p>
+<p>没想到爱德华一世听了这个条件之后立即同意，然后他把自己怀孕的妻子接到了威尔士卡那封城堡中居住。</p>
+<p>爱德华的儿子出生后，他再一次召集了所有的威尔士贵族们来谈判，他指着自己怀中的新生儿说：“这是我的儿子，他出生在威尔士的卡那封，他现在既不会说法语也不会说英语，而且还从来没有犯过任何错误，就像我们之前说好的那样，他就是威尔士的国王，他的名字也叫爱德华。”</p>
+<p>这个孩子就是后来的英王爱德华二世，电影《勇敢的心》里面的那位同性恋王子。当然了《勇敢的心》这部电影从标题到内容符合历史的部分其实是非常有限的。</p>
+<p>从爱德华二世开始，册封男性王储为“威尔士亲王”就成为了英国王室的一个惯例，直到今天英国74岁的查尔斯王子爵位依然是威尔士亲王。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/11.webp" alt="1958年，查尔斯加冕为威尔士亲王"></p>
+<p>在爱德华一世将威尔士纳入囊中之后，自然就盯上了北方的苏格兰。这个时候，苏格兰的邓凯尔德家族最后直系成员——挪威公主玛格丽特，在从挪威前往苏格兰继位的途中，病逝在了船上，苏格兰陷入了王位继承危机，这对于爱德华一世是来说无疑是一个天赐良机。</p>
+<p>为了对抗英格兰，公元1295年，抵抗派的苏格兰贵族们派出代表，前往巴黎和法国签署了著名的<strong>《老同盟条约》</strong>，得到了法国的独立保证。这个同盟从1295年签订，一直到1560年废止，一共存在了265年，是世界上存在时间最长的一个同盟条约。</p>
+<p>不过当时身兼法国诺曼底公爵、阿基坦公爵、布列塔尼亚侯爵和安茹伯爵的爱德华一世才是法兰西王国境内地盘最大的领主，因此“老同盟”的建立并没能阻止爱德华一世吞并苏格兰。</p>
+<p>苏格兰被英格兰吞并之后，苏格兰又爆发了两次独立战争。《勇敢的心》里面描写的华莱士的故事就发生在这一时期，最终利用英格兰陷入了<strong>英法百年战争</strong>的机会，苏格兰才获得了独立。</p>
+<p>从1337年到1453年的英法百年战争和圣女贞德的故事，在法国篇中已经为大家做了详细的介绍，这里就不再赘叙。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/12.webp" alt="百年战争前金雀花王朝所拥有的法国领土"></p>
+<p>也正是在百年战争中，英格兰耗尽了全部的财力和运气，丢失了在欧洲大陆上除加来港以外的全部领土，金雀花王朝也走向了没落。</p>
+<p>百年战争的硝烟还没有完全散去，由于金雀花王朝的绝嗣，它的两大支系——兰开斯特家族和约克家族，围绕着英格兰的王位展开了激烈的血腥争夺。</p>
+<p>因为兰开斯特家族和约克家族分别使用红玫瑰和白玫瑰作为自己的家徽，所以这场英国内战也被称为<strong>玫瑰战争</strong>。</p>
+<p>最终，兰开斯特家族私生子出身的亨利·都铎迎娶了约克家族的继承人伊丽莎白，将两个家族合二为一，亨利·都铎登上了英格兰的王位成为了亨利七世，开启了英格兰<strong>都铎王朝</strong>的统治。</p>
+<h1 id="走向近代曙光的英国"><a href="#走向近代曙光的英国" class="headerlink" title="走向近代曙光的英国"></a>走向近代曙光的英国</h1><p>刚结束内乱的英格兰国王亨利七世为了巩固自己的地位，也为了营造一个安全、稳定、和平的国际环境，积极展开了联姻外交。他的两个女儿分别嫁给了宿敌：苏格兰和法兰西的王储，而且他还为长子亚瑟迎娶了西班牙公主凯瑟琳。</p>
+<p>结果没想到，15岁的亚瑟新婚仅仅一年就突然去世，为了维系和西班牙之间的同盟关系，亨利七世安排自己的次子，也就是未来的亨利八世继续娶了凯瑟琳。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/13.webp" alt="《都铎王朝》第一季剧照"></p>
+<p>美国、加拿大和爱尔兰联合拍摄的《都铎王朝》，就是从亨利八世迎娶了自己嫂嫂的背景下，开始讲述英国乃至欧洲在那个文艺复兴、宗教改革、新航路开辟等一些列社会变革下的历史巨作。</p>
+<p>历史上的亨利八世和凯瑟琳并不像电视剧中那样只有育有一女，实际上他和凯瑟林婚后一共生下过六个子女，可是除了女儿玛丽之外，全都夭折了。</p>
+<p>害怕女儿登基会招致第二次玫瑰战争的亨利八世，决定和凯瑟琳离婚，好再去结婚生儿子。但当时的罗马教会正处在凯瑟琳的外甥神圣罗马帝国皇帝查理五世的控制之下，亨利八世的离婚请求当然得不到教皇的批准。</p>
+<p>更何况信奉天主教的欧洲人对于重婚纳妾和私生子很是鄙夷，所以这也是欧洲历史中，许多国家和王朝动不动就绝嗣的主要原因之一。而中国古代历史却刚好相反，基本上每个王朝都因为子嗣过多，经常发生夺嫡事件，从来没有哪一个王朝是因为绝嗣而灭亡的。</p>
+<p>所以当亨利八世的离婚请求被拒绝后，只能对凯瑟琳进行冷暴力，私下和凯瑟琳的侍女安妮·博林私通。后来因为安妮怀孕，情急之下的亨利八世也算是冲冠一怒为红颜，开始在国内进行所谓的<strong>宗教改革</strong>。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/14.webp" alt="亨利八世"></p>
+<p>之后，亨利八世颁布了<strong>《至尊法案》</strong>，规定英王是英国教会的唯一最高权威，禁止英国教会不经过英王允许发布教规，还禁止英国教会的法庭上诉到罗马教廷，彻底和罗马教廷决裂。</p>
+<p>经过亨利八世的改革，英国的天主教会转变成了一国国教会，叫“盎格鲁宗”，中文翻译为“<strong>圣公会</strong>”。和欧洲大陆上的路德宗、加尔文宗这些真正的宗教改革运动相比，亨利八世只是给英国教会换了个最高领袖而已，在教理教义方面，圣公会和罗马天主教会没有任何的分歧和区别。</p>
+<p>于是，亨利自己给自己批准了离婚申请，然后又一口气结了五次婚，终于在第三段婚姻中如愿以偿地得到了一个儿子，就是后来的爱德华六世。</p>
+<p>亨利八世还在他的财政大臣，也就是空想社会主义名作《乌托邦》的作者托马斯·莫尔的影响下，接纳了来自意大利的<strong>文艺复兴运动</strong>思潮，为英国文学创作提供了较为宽松的环境，诞生了莎士比亚这样的大文豪。</p>
+<p>爱德华六世继位后，还没来得及结婚，就在16岁的时候去世，因此英格兰的王位最终还是回到了亨利八世所厌恶的女儿们的手中。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/15.webp" alt="都铎王朝世系图"></p>
+<p>亨利八世的长女玛丽继承王位后，一改他父亲和弟弟的宗教宽容政策，企图恢复旧有的罗马天主教传统，对在英格兰的新教徒们进行残酷迫害，其手段极为残忍，被人们称之为“血腥玛丽”。</p>
+<p>玛丽或许是因为心理变态还是什么缘故，后来患上了精神病去世，王位最终传给了她同父异母的妹妹——伊丽莎白。</p>
+<p>这位伊丽莎白就是将英格兰带入历史上第一个黄金时代的伊丽莎白一世女王，正是在伊丽莎白一世的统治期间，英格兰在<strong>英西大海战</strong>中，幸运的击败了当时如日中天的西班牙无敌舰队，取代了西班牙殖民大国的地位。</p>
+<p>伊丽莎白一世终身未婚，在她去世之后，都铎王朝也就宣告绝嗣。而苏格兰国王詹姆斯六世凭借着亨利七世玄外孙的身份，继承了英格兰的王位成为英王詹姆斯一世，也随着苏格兰<strong>斯图亚特王朝</strong>入主英格兰，英格兰和苏格兰形成了共主邦联，统一在了一个政府之下。</p>
+<p>詹姆斯一世作为英伦三岛的共主，一方面希望将英格兰圣公会引入苏格兰，在苏格兰为国王建立更高的宗教权威，另一方面又想压制英格兰的议会，在英格兰实行苏格兰式的君主专制的统治。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/16.webp" alt="英国圣公会主教堂——西敏寺"></p>
+<p>在电影《V字仇杀队》中提到的“<strong>火药阴谋事件</strong>”就发生在詹姆斯一世登基为英王的第二年，其原因就是苏格兰的天主教贵族们反对他将圣公会引入苏格兰，企图将詹姆斯一家炸死，以迎立詹姆斯远在波西米亚信奉天主教的女儿为新的英伦三岛共主。</p>
+<p>最终，凭借着詹姆斯一世的妥协精神，国王、议会和圣公会三者之间还能维持巧妙的平衡和相互的容忍。</p>
+<p>然而随着詹姆斯一世的儿子查理一世登上王位后，因为查理一世做事简单粗暴，破坏了三者之间的平衡关系，时局变得一发不可收拾。</p>
+<p>先是在苏格兰爆发了<strong>主教战争</strong>，反抗查理一世将圣公会引入到苏格兰的做法，之后又因为在战争拨款问题上无法和议会达成一致，查理一世又和英格兰议会闹翻了。</p>
+<p>于是，查理一世离开伦敦，前往牛津建立新政府和新议会，被称为“<strong>清教徒革命</strong>”的英国资产阶级革命就此开始。</p>
+<p>在战争初期，议会军被王党军打的节节败退，但在后来，地方乡绅出身的克伦威尔率领自己严格挑选和组建的铁骑军加入到议会军一方，最终在关键性的<strong>马斯顿荒原战役</strong>中击败了王党军。</p>
+<p>之后，查理一世被苏格兰起义军俘虏，移交给了英格兰议会，被英格兰议会下令处死，成为了英国历史唯一一位被处决的正统国王。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/17.webp" alt="“护国公”克伦威尔"></p>
+<p>克伦威尔以护国公的名义在英国建立起了军政府的统治，成立了<strong>英吉利共和国</strong>，英国也因此进入了历史上仅有的一段共和制时期。</p>
+<p>但在这个动荡的时候，克伦威尔并没有把精力放在发展国内经济和民生上面，相反先后发动了苏格兰战争和爱尔兰战争，又对外发动了<strong>英荷战争</strong>，打败了当时号称“海上马车夫”的荷兰，垄断了欧洲前往新大陆和亚洲的运输权。</p>
+<p>常年的战争导致平民和贵族们纷纷觉得共和制还不如原来的君主制好，所以克伦威尔死后，在英国国会的支持下，君主制得以复辟，查理一世的儿子回国登位为查理二世。</p>
+<p>但是在查理二世和他的弟弟詹姆斯二世继位后，都试图恢复君主专制，再一次引发了英国国会的不满。</p>
+<p>最终国会迎立詹姆斯二世的女儿玛丽和女婿荷兰执政威廉来到英国，取代了詹姆斯二世的统治，并且颁布了<strong>《权利法案》</strong>，建立了“<strong>君主立宪制</strong>”政体，将国王的权力限制在法律之下。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/18.webp" alt="接受《权利法案》的玛丽夫妇"></p>
+<p>又因为这是一场不流血的革命，所以往往被人们称之为“<strong>光荣革命</strong>”。</p>
+<h1 id="日不落帝国的辉煌和衰落"><a href="#日不落帝国的辉煌和衰落" class="headerlink" title="日不落帝国的辉煌和衰落"></a>日不落帝国的辉煌和衰落</h1><p>在光荣革命之后，玛丽和她的妹妹安妮相继成为英国女王，但是两人都没有子嗣，再加上之前英国国会通过的《继承法案》，剥夺了所有天主教徒的英国王位继承权。</p>
+<p>当安妮女王去世之后，詹姆斯一世外孙女的儿子——德国汉诺威选帝侯乔治·路易斯，因为信奉新教，从第五十二顺位继承人的身份变成第一顺位继承人，成功继承了英国王位，英国历史也进入了<strong>汉诺威王朝</strong>时期。</p>
+<p>从小在德国长大的乔治一世不会说英语，而他的英国大臣们也不会说德语，所以双方只能依靠翻译或者通过拉丁语加法语的方式进行交流，这就自然使得出席内阁会议对于乔治一世而言，成为了一种折磨和负担。</p>
+<p>所以乔治一世不再出席内阁会议，而是指派财政大权罗伯特代表自己主持内阁会议，英国的<strong>首相制度</strong>也由此诞生。</p>
+<p>后来，乔治一世的儿子乔治二世继位，仍然对罗伯特信任有加。不仅如此，乔治二世还赠送给罗伯特一座宅邸作为首相的官邸，就是沿用至今的伦敦唐宁街十号。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/19.webp" alt="英国首相官邸唐宁街十号"></p>
+<p>乔治二世之后继位的是他的孙子乔治三世，<strong>七年战争</strong>、<strong>美国独立战争</strong>、<strong>拿破仑战争</strong>，以及<strong>马戛尔尼访华</strong>都发生在乔治三世统治期间。可以这样说，乔治三世是最后一位试图恢复君主权威的英国国王，在乔治三世之后的历代英王终于完全接受了君主立宪政体下的虚君地位。</p>
+<p>而英国的国力在乔治三世的孙女——维多利亚女王，在位期间达到了鼎盛。维多利亚女王是英国历史上在位时间第二长的君主，也是人类历史在位时间第二长的女性君主，这两项都是仅次于当今的英国女王伊丽莎白二世。</p>
+<p>可以说维多利亚女王本人就是大英帝国盛世的一个最好的标志，在她在位期间，英国的政治、经济、文化、科学、工业、军事等等诸多方面都进入到了飞速发展的时期。</p>
+<p>大英帝国的殖民版图也大幅扩张，达到了3400万平方公里，一天24小时的太阳照射的地方都有英国的领土，因此大英帝国成为了历史上名副其实的“日不落帝国”。</p>
+<p>非洲的维多利亚湖、维多利亚瀑布、塞舌尔的首都维多利亚、澳大利亚的维多利亚州以及香港的维多利亚港都是以她的名字命名的。直到今天，维多利亚女王的生日仍然是加拿大和苏格兰部分地区的法定假日。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/20.webp" alt="维多利亚夫妇和他们的五个女儿"></p>
+<p>维多利亚女王一生养育了四儿五女，他们和欧洲各国的王室联姻，开枝散叶，维多利亚女王也被称为“欧洲老祖母”。正因如此，维多利亚女王携带的血友病基因，也被传入了欧洲各国的王室，为血友病赢得了“王室病”的戏称。</p>
+<p>在维多利亚女王去世之后，他的儿子爱德华七世继位，开始了延续至今的<strong>温莎王朝</strong>。</p>
+<p>其实温莎家族的本名是萨克森-柯堡-哥达家族，是德国著名的韦廷家族的支系。后来在第一次世界大战中，英德两国成为了敌国，为了淡化王室的德意志色彩，当时的国王乔治五世以英国古王宫温莎堡的名字取代了家族的姓氏，这才有了温莎王朝的称呼。</p>
+<p>温莎王朝时期，由于普鲁士完成了德国的统一，建立了德意志第二帝国，并开始了对外扩张，特别是德皇威廉二世企图将铁路从柏林一直修到巴格达，严重影响到了英国和俄国在中东地区的即得利益。</p>
+<p>于是英国和俄国同德国的宿敌法国签署了三国协约，共同抵制德国的扩张，而德国也为了防止俄国的入侵，以及压制法国的崛起，同奥匈帝国和意大利签署了三国同盟，两大军事集团形成。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/21.webp" alt="一战前的欧洲两大军事集团"></p>
+<p>在1914年6月28日，以萨拉热窝事件为导火索，<strong>第一次世界大战就此爆发</strong>。在交战双方都付出了上千万人伤亡的惨烈代价之后，于1918年11月11日以德国的投降结束了战争。</p>
+<p>之后英国和法国携手，打压了战败的德国、奥匈帝国和土耳其，排斥了中途退出战争的俄国和在战争中存在感十分有限的意大利，而且还成功地遏制了冉冉升起的美国，最终确立了以英、法两国世界霸权为核心的<strong>《凡尔赛条约》</strong>体系。</p>
+<p>然而这一切的荣耀其实都只不过是表面的幻象，英国的经济其实在战争中遭受了沉重的打击，各地殖民地也在不断爆发反抗斗争，1929年爆发的全球经济危机更是加剧了这个老大帝国的衰落。</p>
+<p>由于经济发展的乏力，再加上对于一战惨烈伤亡的沉痛记忆，英国在外交事务上也变得畏首畏尾。面对正在崛起的纳粹德国，英国既没有勇气对纳粹德国的军事复兴做出迎头痛击，也不甘心放弃自己作为战胜国而获得的即得利益，主动接纳德国恢复战前的国际地位。</p>
+<p>就在纳粹德国的不断试探、挑衅和得寸进尺中，英国选择一而再，再而三地退缩和让步，还企图将战火引向苏联，这种做法显然无异于国际局势的稳定。</p>
+<p>最终就在英国和法国的纵容下，1939年9月1日，德国闪击英法盟友波兰，<strong>第二次世界大战</strong>正式爆发。关于两次世界大战的过程，在德、法、意三篇中都有提及，这里就不再作赘述。</p>
+<p><img src="/resources/post_image/2023/06/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AC%A1%E6%80%A7%E8%B5%B0%E5%AE%8C%E6%95%B4%E4%B8%AA%E8%8B%B1%E5%9B%BD%E5%8E%86%E5%8F%B2%EF%BC%81/22.webp" alt="二战后残破不堪的英国伦敦"></p>
+<p>第二次世界大战结束后，英国虽然曾一度勉强和美苏并列为世界三强，但其国力早已是今非昔比。最终，昔日大英帝国称霸世界的种种权势，也都落入它当年的殖民地美国的手中。</p>
+<blockquote>
+<p>原文地址：<a href="https://baijiahao.baidu.com/s?id=1725690672167978407&wfr=spider&for=pc">https://baijiahao.baidu.com/s?id=1725690672167978407&amp;wfr=spider&amp;for=pc</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>随笔&amp;杂谈</category>
+      </categories>
+      <tags>
+        <tag>西方历史</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>XSS 入门详解</title>
+    <url>/article/2023/06/7324723f4c51.html</url>
+    <content><![CDATA[<h1 id="0x01-简介"><a href="#0x01-简介" class="headerlink" title="0x01 简介"></a>0x01 简介</h1><p><strong>跨站脚本</strong>（cross site script）为了避免与样式css混淆，所以简称为XSS。 XSS是一种经常出现在web应用中的计算机安全漏洞，也是web中最主流的攻击方式。</p>
+<p><strong>XSS</strong> 攻击指黑客通过特殊的手段往网页中插入了恶意的 JavaScript 脚本，从而在用户浏览网页时，对用户浏览器发起 Cookie 资料窃取、会话劫持、钓鱼欺骗等各攻击。</p>
+<p>XSS 跨站脚本攻击本身对 Web 服务器没有直接危害，它借助网站进行传播，使网站的大量用户受到攻击。攻击者一般通过留言、电子邮件或其他途径向受害者发送一个精心构造的恶意 URL，当受害者在 Web 浏览器中打开该URL的时侯，恶意脚本会在受害者的计算机上悄悄执行。</p>
+<span id="more"></span>
+
+<p>XSS 跨站脚本攻击漏洞也是OWASP Top 10中经常出现的对象，造成XSS漏洞普遍流行的原因如下:</p>
+<ol>
+<li>Web 浏览器本身的设计不安全，无法判断 JS 代码是否是恶意的</li>
+<li>输入与输出的 Web 应用程序基本交互防护不够</li>
+<li>程序员缺乏安全意识，缺少对 XSS 漏洞的认知</li>
+<li>XSS 触发简单，完全防御起来相当困难</li>
+</ol>
+<p>XSS攻击的危害包括：</p>
+<ol>
+<li>盗取各类用户帐号，如机器登录帐号、用户网银帐号、各类管理员帐号</li>
+<li>控制企业数据，包括读取、篡改、添加、删除企业敏感数据的能力</li>
+<li>盗窃企业重要的具有商业价值的资料</li>
+<li>非法转账</li>
+<li>强制发送电子邮件</li>
+<li>网站挂马</li>
+<li>控制受害者机器向其它网站发起攻击</li>
+</ol>
+<h1 id="0x02-跨站脚本实例"><a href="#0x02-跨站脚本实例" class="headerlink" title="0x02 跨站脚本实例"></a>0x02 跨站脚本实例</h1><p>下面的 HTML 代码就演示了一个最基本的 XSS 弹窗:</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>直接在 HTML 页面通过</p>
+<h1 id="0x03-XSS-的危害"><a href="#0x03-XSS-的危害" class="headerlink" title="0x03 XSS 的危害"></a>0x03 XSS 的危害</h1><p>XSS 可能不如 SQL 注射、文件上传等能够直接得到较高操作权限的漏洞，但是它的运用十分灵活（这使它成为最深受黑客喜爱的攻击技术之一），只要开拓思维，适当结合其他技术一起运用，XSS 的威力还是很大的。可能会给网站和用户带来的危害简单概括如下:</p>
+<ol>
+<li>网络钓鱼</li>
+<li>盗取用户 cookies 信息</li>
+<li>劫持用户浏览器</li>
+<li>强制弹出广告页面、刷流量</li>
+<li>网页挂马</li>
+<li>进行恶意操作，例如任意篡改页面信息</li>
+<li>获取客户端隐私信息</li>
+<li>控制受害者机器向其他网站发起攻击</li>
+<li>结合其他漏洞，如 CSRF 漏洞，实施进一步作恶</li>
+<li>提升用户权限，包括进一步渗透网站</li>
+<li>传播跨站脚本蠕虫等</li>
+</ol>
+<h1 id="0x04-分类"><a href="#0x04-分类" class="headerlink" title="0x04 分类"></a>0x04 分类</h1><h2 id="x0x04001-反射型XSS（非持久型）"><a href="#x0x04001-反射型XSS（非持久型）" class="headerlink" title="x0x04001 反射型XSS（非持久型）"></a>x0x04001 反射型XSS（非持久型）</h2><p>反射型XSS只是简单的把用户输入的数据从服务器反射给用户浏览器，要利用这个漏洞，攻击者必须以某种方式诱导用户访问一个精心设计的URL（恶意链接），才能实施攻击。</p>
+<p><strong>漏洞成因</strong></p>
+<ol>
+<li>当用户的输入或者一些用户可控参数未经处理地输出到页面上，就容易产生XSS漏洞。主要场景有以下几种:</li>
+<li>将不可信数据插入到HTML标签之间时，例如: div, p, td；</li>
+<li>将不可信数据插入到HTML属性里时，例如: <code>&lt;div width=$INPUT&gt;&lt;/div&gt;</code></li>
+<li>将不可信数据插入到SCRIPT里时，例如: <code>&lt;script&gt;var message = &quot;$INPUT&quot;;&lt;/script&gt;</code></li>
+<li>还有插入到Style属性里的情况，同样具有一定的危害性，例如: <code>&lt;span style=&quot;property : $INPUT&quot;&gt;&lt;/span&gt;</code></li>
+<li>将不可信数据插入到HTML URL里时，例如: <code>&lt;a href=&quot;[http://www.abcd.com?param=](http://www.ccc.com/?param=) $INPUT&quot;&gt;&lt;/a&gt;</code></li>
+<li>使用富文本时，没有使用XSS规则引擎进行编码过滤</li>
+</ol>
+<p>对于以上的几个场景，若服务端或者前端没有做好防范措施，就会出现漏洞隐患。</p>
+<p><strong>攻击流程</strong></p>
+<p>反射型XSS通常出现在搜索等功能中，需要被攻击者点击对应的链接才能触发，且受到XSS Auditor(chrome内置的XSS保护)、NoScript等防御手段的影响较大，所以它的危害性较存储型要小。</p>
+<p><img src="/resources/post_image/2023/06/XSS%20%E5%85%A5%E9%97%A8%E8%AF%A6%E8%A7%A3/01.png" alt="图01"></p>
+<h2 id="0x04002-存储型XSS（持久型）"><a href="#0x04002-存储型XSS（持久型）" class="headerlink" title="0x04002 存储型XSS（持久型）"></a>0x04002 存储型XSS（持久型）</h2><p><strong>漏洞成因</strong></p>
+<p>存储型XSS漏洞的成因与反射型的根源类似，不同的是恶意代码会被保存在服务器中，导致其它用户（前端）和管理员（前后端）在访问资源时执行了恶意代码，用户访问服务器-跨站链接-返回跨站代码。</p>
+<p><strong>攻击流程</strong></p>
+<p><img src="/resources/post_image/2023/06/XSS%20%E5%85%A5%E9%97%A8%E8%AF%A6%E8%A7%A3/02.png" alt="图02"></p>
+<h2 id="0x04003-DOM型XSS"><a href="#0x04003-DOM型XSS" class="headerlink" title="0x04003 DOM型XSS"></a>0x04003 DOM型XSS</h2><p>输入的恶意代码不会经过服务器，在前端被js代码直接读取放置到前端的标签中，是一 种特殊的反射型XSS。</p>
+<p><strong>漏洞成因</strong></p>
+<p>DOM型XSS是基于DOM文档对象模型的。对于浏览器来说，DOM文档就是一份XML文档，当有了这个标准的技术之后，通过JavaScript就可以轻松的访问DOM。当确认客户端代码中有DOM型XSS漏洞时，诱使(钓鱼)一名用户访问自己构造的URL，利用步骤和反射型很类似，但是唯一的区别就是，构造的URL参数不用发送到服务器端，可以达到绕过WAF、躲避服务端的检测效果。</p>
+<p>下面编写一个简单的含有 DOM XSS漏洞的 HTML 代码:</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">xss</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> str = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;src&quot;</span>).<span class="property">value</span>;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;demo&quot;</span>).<span class="property">innerHTML</span> = <span class="string">&quot;&lt;img src=&#x27;&quot;</span>+str+<span class="string">&quot;&#x27; /&gt;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;src&quot;</span> <span class="attr">size</span>=<span class="string">&quot;50&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;输入图片地址&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">value</span>=<span class="string">&quot;插入&quot;</span> <span class="attr">onclick</span>=<span class="string">&quot;xss()&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;demo&quot;</span> &gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>用户输入框插入图片地址后，页面会将图片插入在id&#x3D;“demo” 的 div 标签中，从而显示在网页上:</p>
+<p><img src="/resources/post_image/2023/06/XSS%20%E5%85%A5%E9%97%A8%E8%AF%A6%E8%A7%A3/03.png" alt="图03"></p>
+<p>同样，这里也没有对用户的输入进入过滤，当攻击者构造如下语句插入的时候:</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;1&quot;</span> <span class="attr">onerror</span>=<span class="string">&quot;alert(1)&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/resources/post_image/2023/06/XSS%20%E5%85%A5%E9%97%A8%E8%AF%A6%E8%A7%A3/04.png" alt="图04"></p>
+<p>会直接在img标签中插入onerror事件，该语句表示当图片加载出错的时候，自动触发后面的 alert()函数，来达到弹窗的效果，这就是一个最简单的 DOM 型 XSS 漏洞。</p>
+<h2 id="0x04004-通用型XSS"><a href="#0x04004-通用型XSS" class="headerlink" title="0x04004 通用型XSS"></a>0x04004 通用型XSS</h2><p>通用型XSS，也叫做UXSS或者Universal XSS，全称Universal Cross-Site Scripting。</p>
+<p>上面三种XSS攻击的是因为客户端或服务端的代码开发不严谨等问题而存在漏洞的目标网站或者应用程序。这些攻击的先决条件是访问页面存在漏洞，但是UXSS是一种利用浏览器或者浏览器扩展漏洞来制造产生XSS的条件并执行代码的一种攻击类型。</p>
+<p><strong>漏洞成因</strong></p>
+<p>Web浏览器是正在使用的最流行的应用程序之一，当一个新漏洞被发现的时候，不管自己利用还是说报告给官方，而这个过程中都有一段不小的时间，这一过程中漏洞都可能被利用于UXSS。</p>
+<p>不仅是浏览器本身的漏洞，现在主流浏览器都支持扩展程序的安装，而众多的浏览器扩展程序可能导致带来更多的漏洞和安全问题。因为UXSS攻击不需要网站页面本身存在漏洞，同时可能访问其他安全无漏洞页面，使得UXSS成为XSS里危险和最具破坏性的攻击类型之一。</p>
+<p><strong>漏洞案例</strong></p>
+<p>IE6或火狐浏览器扩展程序Adobe Acrobat的漏洞</p>
+<p>这是一个比较经典的例子。当使用扩展程序时导致错误，使得代码可以执行。这是一个在pdf阅读器中的bug，允许攻击者在客户端执行脚本。构造恶意页面，写入恶意脚本，并利用扩展程序打开pdf时运行代码。tefano Di Paola 和 Giorgio Fedon在一个在Mozilla Firefox浏览器Adobe Reader的插件中可利用的缺陷中第一个记录和描述的UXSS，Adobe插件通过一系列参数允许从外部数据源取数据进行文档表单的填充，如果没有正确的执行，将允许跨站脚本攻击。</p>
+<h2 id="0x04005-突变型XSS"><a href="#0x04005-突变型XSS" class="headerlink" title="0x04005 突变型XSS"></a>0x04005 突变型XSS</h2><p>突变型XSS，也叫做mXSS或，全称Mutation-based Cross-Site-Scripting。（mutation，突变，来自遗传学的一个单词，大家都知道的基因突变，gene mutation）</p>
+<p><strong>漏洞成因</strong></p>
+<p>然而，如果用户所提供的富文本内容通过javascript代码进入innerHTML属性后，一些意外的变化会使得这个认定不再成立：浏览器的渲染引擎会将本来没有任何危害的HTML代码渲染成具有潜在危险的XSS攻击代码。</p>
+<p>随后，该段攻击代码，可能会被JS代码中的其它一些流程输出到DOM中或是其它方式被再次渲染，从而导致XSS的执行。 这种由于HTML内容进入innerHTML后发生意外变化，而最终导致XSS的攻击流程。</p>
+<p><strong>攻击流程</strong></p>
+<p>将拼接的内容置于innerHTML这种操作，在现在的WEB应用代码中十分常见，常见的WEB应用中很多都使用了innerHTML属性，这将会导致潜在的mXSS攻击。从浏览器角度来讲，mXSS对三大主流浏览器（IE，CHROME，FIREFOX）均有影响。</p>
+]]></content>
+      <categories>
+        <category>网络&amp;安全</category>
+      </categories>
+      <tags>
+        <tag>Web</tag>
+        <tag>XSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL 数据导入失败的常见报错和解决方法</title>
+    <url>/article/2021/05/d5631440e0c1.html</url>
+    <content><![CDATA[<p><strong>0x01 MySQL 报 “Error 2006 MySQLserver has gone away” 的解决方法</strong></p>
+<p>找到 MySQL 安装目录下的 my.ini（Linux 下为 &#x2F;etc&#x2F;my.cnf）配置文件，进行如下配置：</p>
+<blockquote>
+<p>max_allowed_packet&#x3D;500M<br>wait_timeout&#x3D;288000<br>interactive_timeout &#x3D; 288000</p>
+</blockquote>
+<span id="more"></span>
+
+<p>修改后重启下 MySQL 服务后问题解决。</p>
+<p>三个参数注释如下：</p>
+<p>max_allowed_packet 是 MySQL 允许最大的数据包，也就是你发送的请求；<br>wait_timeout 是等待的最长时间，这个值大家可以自定义，但如果时间太短的话，超时就会报错；<br>max_allowed_packet 参数的作用是，用来控制其通信缓冲区的最大长度；</p>
+<p><strong>0x02 MySQL 报 “Error 1292 Incorrect datetime value: 0000-00-00 00:00:00 ……” 的解决方法</strong></p>
+<p>这是因为当前的 MySQL 不支持 datetime 类型数据为 0 的情况。</p>
+<p><strong>解决方法：修改 sql_mode 值</strong></p>
+<blockquote>
+<p>sql_mode：SQL Mode 定义了 MySQL 应支持的 SQL 语法、数据校验等，这样可以更容易地在不同的环境中使用 MySQL。 </p>
+</blockquote>
+<p><strong>修改全局 sql_mode</strong> </p>
+<p>查看全局 sql_mode：</p>
+<pre><code>select @@global.sql_mode;
+</code></pre>
+<p>可以看到 NO_ZERO_DATE 和 NO_ZERO_IN_DATE，把这两个设置去掉。</p>
+<pre><code>set @@global.sql_mode = &#39;在原值基础上去掉上面两个后的值&#39;;
+</code></pre>
+<p>P.S. 修改当前 sql_mode 的 语句为 <code>select @@sql_mode;</code>，之后操作同上。</p>
+]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Debug</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Android 开发抄书笔记 —— 活动</title>
+    <url>/article/2021/01/0cb84e122cde.html</url>
+    <content><![CDATA[<h1 id="0x00-活动是什么"><a href="#0x00-活动是什么" class="headerlink" title="0x00 活动是什么"></a>0x00 活动是什么</h1><p>活动（Activity）是一众可以包含用户界面的组件，主要用于和用户交互。</p>
+<span id="more"></span>
+
+<h1 id="0x01-手动创建一个活动"><a href="#0x01-手动创建一个活动" class="headerlink" title="0x01 手动创建一个活动"></a>0x01 手动创建一个活动</h1><p>** 创建活动 **</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FirstActivity</span> <span class="keyword">extends</span> <span class="title class_">AppCompatActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>项目中的任何活动都应该重写 Activity 的 onCreate() 方法</li>
+</ul>
+</blockquote>
+<h1 id="0x02-创建和加载布局"><a href="#0x02-创建和加载布局" class="headerlink" title="0x02 创建和加载布局"></a>0x02 创建和加载布局</h1><p>** 创建布局 **</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">&quot;vertical&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">&quot;@+id/button_1&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">&quot;Button 1&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>LinearLayout 是布局根元素之一  </li>
+<li>android:id 是给当前元素定义一个唯一标识符，可以再代码中根据标识符对这个元素进行操作  </li>
+<li>match_parent 表示让当前元素的尺寸和父元素相同，wrap_content 表示当前元素的尺寸刚好包含里面的内容</li>
+</ul>
+</blockquote>
+<p>** 在活动中加载布局 **</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FirstActivity</span> <span class="keyword">extends</span> <span class="title class_">AppCompatActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.first_layout); <span class="comment">// 通过 setContentView 方法加载布局</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>其中 first_layout 是布局文件名</li>
+</ul>
+</blockquote>
+<h5 id="0x03-在-AndroidManifest-文件中注册"><a href="#0x03-在-AndroidManifest-文件中注册" class="headerlink" title="0x03 在 AndroidManifest 文件中注册"></a>0x03 在 AndroidManifest 文件中注册</h5><p>所有的活动都要在 AndroidManifest.xml 中进行注册才能生效</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">manifest</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">package</span>=<span class="string">&quot;com.example.activitytest&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">application</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:allowBackup</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:icon</span>=<span class="string">&quot;@mipmap/ic_launcher&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:label</span>=<span class="string">&quot;@string/app_name&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:supportsRtl</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:theme</span>=<span class="string">&quot;@style/AppTheme&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">&quot;.FirstActivity&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:label</span>=<span class="string">&quot;This is FirstActivity&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.action.Main&quot;</span> /&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.category.LAUNCHER&quot;</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>在 <code>&lt;activity&gt;</code> 标签中使用 android:name 来指定具体注册哪一个活动  </li>
+<li>.FirstActivity 是 com.example.activitytest.FirstActiviity 的缩写，在最外层 <code>&lt;manifest&gt;</code> 标签中定义了 package 属性  </li>
+<li>配置主活动的方法就是在 <code>&lt;activity&gt;</code> 标签的内部加入 <code>&lt;intent-filter&gt;</code> 标签，并在内部加入如上的两句声明  </li>
+<li>可以使用 android:label 指定活动中标题栏的内容，标题栏是显示在活动最顶部的，给主活动指定的 label 不仅会成为标题栏中的内容，还会成为启动器（Launcher）中应用程序显示的名称  </li>
+<li>如果应用程序中没有声明任何一个活动作为主活动程序仍然可以正常安装，只是启动器中无法看到或打开这个程序，这种程序一般作为第三方服务工其他应用在内部调用，如支付宝快捷支付服务</li>
+</ul>
+</blockquote>
+<h5 id="0x04-活动中使用-Toast（简单消息通知）"><a href="#0x04-活动中使用-Toast（简单消息通知）" class="headerlink" title="0x04 活动中使用 Toast（简单消息通知）"></a>0x04 活动中使用 Toast（简单消息通知）</h5><p>点击按钮显示消息通知</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span> <span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.first_layout);</span><br><span class="line">    <span class="type">Button</span> <span class="variable">button1</span> <span class="operator">=</span> (Button) findViewById(R.id.button_1); <span class="comment">// 绑定按钮</span></span><br><span class="line">    button1.setOnClickListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnClickListener() &#123; <span class="comment">// 设置按钮监听</span></span><br><span class="line">        </span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span> <span class="params">(View v)</span> &#123; <span class="comment">// 重写父类方法</span></span><br><span class="line"></span><br><span class="line">            Toast.makeText(FirstActivity.<span class="built_in">this</span>, <span class="string">&quot;You clicked Button 1&quot;</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>通过 findViewById() 方法可以获取到布局文件定义的元素，传入 R.id.button_1 来获取按钮的实力（button_1 为布局中的 id 属性），findViewById() 方法返回的是一个 View 对象，需要向下转型成 Buttonb 对象</li>
+<li>通过 setOnClickListener() 方法为按钮注册一个监听器，点击按钮就会执行监听器中的 onClick() 方法</li>
+<li>makeText() 方法需要传入3个参数。第一个参数是Context，也就是上下文，活动本身就是一个 Context 对象，所以直接传入 FirstActivity.this 即可。第二个参数是 Toast 显示的文本内容。第三个参数是 Toast 显示的时长，有两个内置常量 Toast.LENGTH_SHORT 和 Toast.LENGTH_LONG 可选择。</li>
+</ul>
+</blockquote>
+<h1 id="在活动中使用-Menu"><a href="#在活动中使用-Menu" class="headerlink" title="在活动中使用 Menu"></a>在活动中使用 Menu</h1>]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot 实现邮件发送功能</title>
+    <url>/article/2020/12/fe4dd8648a79.html</url>
+    <content><![CDATA[<h1 id="0x00-添加Starter模块依赖"><a href="#0x00-添加Starter模块依赖" class="headerlink" title="0x00 添加Starter模块依赖"></a>0x00 添加Starter模块依赖</h1><p>在 Maven pom.xml 配置文件中加入 spring-boot-starter-mail 依赖。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-mail<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h1 id="添加Spring-Boot配置"><a href="#添加Spring-Boot配置" class="headerlink" title="添加Spring Boot配置"></a>添加Spring Boot配置</h1><p>然后在 application.yml 文件中加入以下配置。</p>
+<p><strong>腾讯QQ邮箱配置</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  mail:</span><br><span class="line">    host: smtp.qq.com #发送邮件服务器</span><br><span class="line">    username: 1016767658@qq.com #发送邮件的邮箱地址</span><br><span class="line">    password:  ivhkrc*****kbdcf #客户端授权码，不是邮箱密码，这个在qq邮箱设置里面自动生成的</span><br><span class="line">    properties.mail.smtp.port: 465 #端口号465或587</span><br><span class="line">    from: 1016767658@qq.com # 发送邮件的地址，和上面username一致</span><br><span class="line">    properties.mail.smtp.starttls.enable: true</span><br><span class="line">    properties.mail.smtp.starttls.required: true</span><br><span class="line">    properties.mail.smtp.ssl.enable: true</span><br><span class="line">    default-encoding: utf-8</span><br></pre></td></tr></table></figure>
+
+<p><strong>网易(126&#x2F;163&#x2F;yeah)邮箱配置</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  mail:</span><br><span class="line">    host: smtp.126.com #发送邮件服务器</span><br><span class="line">    username: xx@126.com #发送邮件的邮箱地址</span><br><span class="line">    password: xxxxxxx #客户端授权码，不是邮箱密码,网易的是自己设置的</span><br><span class="line">    properties.mail.smtp.port: 994 #465或者994</span><br><span class="line">    from: xxx@126.com # 发送邮件的地址，和上面username一致</span><br><span class="line">    properties.mail.smtp.starttls.enable: true</span><br><span class="line">    properties.mail.smtp.starttls.required: true</span><br><span class="line">    properties.mail.smtp.ssl.enable: true</span><br><span class="line">    default-encoding: utf-8</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<blockquote>
+<p>126邮箱SMTP服务器地址:smtp.126.com,端口号:465或者994<br>163邮箱SMTP服务器地址:smtp.163.com,端口号:465或者994<br>yeah邮箱SMTP服务器地址:smtp.yeah.net,端口号:465或者994  </p>
+</blockquote>
+<h1 id="Java-代码实现"><a href="#Java-代码实现" class="headerlink" title="Java 代码实现"></a>Java 代码实现</h1><p><strong>封装邮件接口，方便调用发送邮件 IMailService 接口</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jiangfeixiang.sendemail;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: 姜飞祥</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 封装一个发邮件的接口，后边直接调用即可</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: Create in 2019/1/28/0028 21:57</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>: $params$</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>: $returns$</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">IMailService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送文本邮件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> to 收件人</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subject 主题</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 内容</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">sendSimpleMail</span><span class="params">(String to, String subject, String content)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送HTML邮件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> to 收件人</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subject 主题</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 内容</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendHtmlMail</span><span class="params">(String to, String subject, String content)</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送带附件的邮件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> to 收件人</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subject 主题</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 内容</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> filePath 附件</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendAttachmentsMail</span><span class="params">(String to, String subject, String content, String filePath)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>IMailServiceImpl 实现类</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package com.jiangfeixiang.sendemail;</span><br><span class="line"></span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.beans.factory.annotation.Value;</span><br><span class="line">import org.springframework.core.io.FileSystemResource;</span><br><span class="line">import org.springframework.mail.SimpleMailMessage;</span><br><span class="line">import org.springframework.mail.javamail.JavaMailSender;</span><br><span class="line">import org.springframework.mail.javamail.MimeMessageHelper;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line">import javax.mail.MessagingException;</span><br><span class="line">import javax.mail.internet.MimeMessage;</span><br><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Author: 姜飞祥</span><br><span class="line"> * @Description:</span><br><span class="line"> * @Date: Create in 2019/1/28/0028 22:00</span><br><span class="line"> * @param: $params$</span><br><span class="line"> * @return: $returns$</span><br><span class="line"> */</span><br><span class="line">@Service</span><br><span class="line">public class IMailServiceImpl implements IMailService &#123;</span><br><span class="line">    private final Logger logger = LoggerFactory.getLogger(this.getClass());</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Spring Boot 提供了一个发送邮件的简单抽象，使用的是下面这个接口，这里直接注入即可使用</span><br><span class="line">     */</span><br><span class="line">    @Autowired</span><br><span class="line">    private JavaMailSender mailSender;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 配置文件中我的qq邮箱</span><br><span class="line">     */</span><br><span class="line">    @Value(&quot;$&#123;spring.mail.from&#125;&quot;)</span><br><span class="line">    private String from;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 简单文本邮件</span><br><span class="line">     * @param to 收件人</span><br><span class="line">     * @param subject 主题</span><br><span class="line">     * @param content 内容</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void sendSimpleMail(String to, String subject, String content) &#123;</span><br><span class="line">        //创建SimpleMailMessage对象</span><br><span class="line">        SimpleMailMessage message = new SimpleMailMessage();</span><br><span class="line">        //邮件发送人</span><br><span class="line">        message.setFrom(from);</span><br><span class="line">        //邮件接收人</span><br><span class="line">        message.setTo(to);</span><br><span class="line">        //邮件主题</span><br><span class="line">        message.setSubject(subject);</span><br><span class="line">        //邮件内容</span><br><span class="line">        message.setText(content);</span><br><span class="line">        //发送邮件</span><br><span class="line">        mailSender.send(message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * html邮件</span><br><span class="line">     * @param to 收件人</span><br><span class="line">     * @param subject 主题</span><br><span class="line">     * @param content 内容</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void sendHtmlMail(String to, String subject, String content) &#123;</span><br><span class="line">        //获取MimeMessage对象</span><br><span class="line">        MimeMessage message = mailSender.createMimeMessage();</span><br><span class="line">        MimeMessageHelper messageHelper;</span><br><span class="line">        try &#123;</span><br><span class="line">            messageHelper = new MimeMessageHelper(message, true);</span><br><span class="line">            //邮件发送人</span><br><span class="line">            messageHelper.setFrom(from);</span><br><span class="line">            //邮件接收人</span><br><span class="line">            messageHelper.setTo(subject);</span><br><span class="line">            //邮件主题</span><br><span class="line">            message.setSubject(subject);</span><br><span class="line">            //邮件内容，html格式</span><br><span class="line">            messageHelper.setText(content, true);</span><br><span class="line">            //发送</span><br><span class="line">            mailSender.send(message);</span><br><span class="line">            //日志信息</span><br><span class="line">            logger.info(&quot;邮件已经发送。&quot;);</span><br><span class="line">        &#125; catch (MessagingException e) &#123;</span><br><span class="line">            logger.error(&quot;发送邮件时发生异常！&quot;, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 带附件的邮件</span><br><span class="line">     * @param to 收件人</span><br><span class="line">     * @param subject 主题</span><br><span class="line">     * @param content 内容</span><br><span class="line">     * @param filePath 附件</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void sendAttachmentsMail(String to, String subject, String content, String filePath) &#123;</span><br><span class="line">        MimeMessage message = mailSender.createMimeMessage();</span><br><span class="line">        try &#123;</span><br><span class="line">            MimeMessageHelper helper = new MimeMessageHelper(message, true);</span><br><span class="line">            helper.setFrom(from);</span><br><span class="line">            helper.setTo(to);</span><br><span class="line">            helper.setSubject(subject);</span><br><span class="line">            helper.setText(content, true);</span><br><span class="line"></span><br><span class="line">            FileSystemResource file = new FileSystemResource(new File(filePath));</span><br><span class="line">            String fileName = filePath.substring(filePath.lastIndexOf(File.separator));</span><br><span class="line">            helper.addAttachment(fileName, file);</span><br><span class="line">            mailSender.send(message);</span><br><span class="line">            //日志信息</span><br><span class="line">            logger.info(&quot;邮件已经发送。&quot;);</span><br><span class="line">        &#125; catch (MessagingException e) &#123;</span><br><span class="line">            logger.error(&quot;发送邮件时发生异常！&quot;, e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package com.jiangfeixiang.sendemail;</span><br><span class="line"></span><br><span class="line">import org.junit.Test;</span><br><span class="line">import org.junit.runner.RunWith;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.boot.test.context.SpringBootTest;</span><br><span class="line">import org.springframework.test.context.junit4.SpringRunner;</span><br><span class="line"></span><br><span class="line">@RunWith(SpringRunner.class)</span><br><span class="line">@SpringBootTest</span><br><span class="line">public class SendemailApplicationTests &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 注入发送邮件的接口</span><br><span class="line">     */</span><br><span class="line">    @Autowired</span><br><span class="line">    private IMailService mailService;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试发送文本邮件</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void sendmail() &#123;</span><br><span class="line">        mailService.sendSimpleMail(&quot;smfx1314@163.com&quot;,&quot;主题：你好普通邮件&quot;,&quot;内容：第一封邮件&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void sendmailHtml()&#123;</span><br><span class="line">        mailService.sendHtmlMail(&quot;smfx1314@163.com&quot;,&quot;主题：你好html邮件&quot;,&quot;&lt;h1&gt;内容：第一封html邮件&lt;/h1&gt;&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>SpringBoot</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PHP 调用 COM 组件方法</title>
+    <url>/article/2020/12/d9b6e2ccf574.html</url>
+    <content><![CDATA[<h1 id="0x00-开启-COM-组件扩展"><a href="#0x00-开启-COM-组件扩展" class="headerlink" title="0x00 开启 COM 组件扩展"></a>0x00 开启 COM 组件扩展</h1><p>打开 php.ini 配置文件，搜索 <code>#extension=php_com_dotnet.dll</code> ，将前面的 # 注释打开，然后重启 web 服务。</p>
+<p>可以使用 <code>phpinfo()</code> 函数打印并搜索 <code>com_dotnet</code> 关键字，确认扩展是否成功加载。</p>
+<span id="more"></span>
+
+<h1 id="0x01-注册-COM-组件-DLL-文件"><a href="#0x01-注册-COM-组件-DLL-文件" class="headerlink" title="0x01 注册 COM 组件 DLL 文件"></a>0x01 注册 COM 组件 DLL 文件</h1><p>在命令行下键入 <code>regsvr32 Ecgana.dll</code> 命令进行注册（文件名和路径自行更改）。</p>
+<h1 id="0x02-测试-COM-组件"><a href="#0x02-测试-COM-组件" class="headerlink" title="0x02 测试 COM 组件"></a>0x02 测试 COM 组件</h1><p>新建一个 php 文件，输入如下内容并访问，如果没有报错则说明组件引入成功：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$com</span> = <span class="keyword">new</span> \<span class="title function_ invoke__">COM</span>(<span class="string">&#x27;Ecgana.init&#x27;</span>); <span class="comment">// 括号内容请根据实际使用修改</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试发现，使用集成环境 PHPStudy 进行开发时，最新v8.1版在调用组件的时候报错，提示组件没有注册，而在旧版本中就不会出现问题。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MyBatis 缓存导致查询非最新数据问题</title>
+    <url>/article/2020/12/428c4133c975.html</url>
+    <content><![CDATA[<h1 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h1><p>MyBatis 缓存导致查询非最新数据</p>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>在 mapper 的 xml 标签中加入 <code>flushCache=&quot;true&quot;</code> 和 <code>useCache=&quot;false&quot;</code> 属性</p>
+<span id="more"></span>
+
+<h1 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h1><p>当为 select 语句时：</p>
+<blockquote>
+<p>flushCache 默认为 false，表示任何时候调用语句，都不会清空本地缓存和二级缓存。<br>useCache 默认为 true，表示会将本条语句的结果进行二级缓存。</p>
+</blockquote>
+<p>当为 insert、update、delete 语句时：</p>
+<blockquote>
+<p>flushCache 默认为 true，表示任何时候语句被调用，都会导致本地缓存和二级缓存被清空。<br>useCache 属性在该情况下没有。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>MyBatis</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo 因子文件夹存在 .git 而无法提交的解决方法</title>
+    <url>/article/2020/07/8a9f2a9e0a48.html</url>
+    <content><![CDATA[<h1 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h1><p>无法提交根本原因是next主题也是一个repo。</p>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>1、剪切 themes&#x2F;next&#x2F;.git 文件夹到其他处</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">mv</span> themes/next/.git ~/otherpath</span></span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>或者直接删除（视情况而定）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">rm</span> -r themes/next/.git</span></span><br></pre></td></tr></table></figure>
+
+<p>2、从暂存区删除该文件夹</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">rm</span> --cache themes/next</span></span><br></pre></td></tr></table></figure>
+
+<p>3、使用 <code>git status</code> 查看状态</p>
+<p>4、提交三连</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git add .</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git commit -m <span class="string">&quot;message&quot;</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git push</span></span><br></pre></td></tr></table></figure>
+
+<p>5、移回 themes&#x2F;next&#x2F;.git 文件夹（未删除处理）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">mv</span> ~/otherpath themes/next/.git</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Manjaro 报 Cannot find the fakeroot binary 错误原因及解决</title>
+    <url>/article/2020/07/0088f18fb8a7.html</url>
+    <content><![CDATA[<h1 id="报错内容"><a href="#报错内容" class="headerlink" title="报错内容"></a>报错内容</h1><blockquote>
+<p>ERROR: Cannot find the fakeroot binary required for building as non-root user.<br>ERROR: Cannot find the strip binary required for object file stripping.  </p>
+</blockquote>
+<span id="more"></span>
+
+<h1 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h1><p>没安装 fakeroot、binutils 等打包基本工具</p>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>运行如下命令进行安装：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo pacman -Sy base-devel</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Manjaro</tag>
+        <tag>Debug</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux 解决从 Github 下载慢问题</title>
+    <url>/article/2020/07/48624e756fb6.html</url>
+    <content><![CDATA[<h1 id="查看-Github-访问节点-IP"><a href="#查看-Github-访问节点-IP" class="headerlink" title="查看 Github 访问节点 IP"></a>查看 Github 访问节点 IP</h1><p>访问 <code>https://www.ipaddress.com/</code> 查询下面三个域名的 IP 节点</p>
+<blockquote>
+<p>github.com<br>github.global.ssl.fastly.net<br>codeload.github.com  </p>
+</blockquote>
+<span id="more"></span>
+
+<h1 id="修改-hosts-文件"><a href="#修改-hosts-文件" class="headerlink" title="修改 hosts 文件"></a>修改 hosts 文件</h1><p>如下命令打开 hosts 文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">vim /etc/hosts</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="在-hosts-文件中添加-Github-的域名指向"><a href="#在-hosts-文件中添加-Github-的域名指向" class="headerlink" title="在 hosts 文件中添加 Github 的域名指向"></a>在 hosts 文件中添加 Github 的域名指向</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">192.30.253.113  github.com</span><br><span class="line">151.101.185.194 github.global.ssl.fastly.net</span><br><span class="line">192.30.253.120  codeload.github.com</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意修改上面内容的实际 IP</p>
+</blockquote>
+<h1 id="重新载入网络配置"><a href="#重新载入网络配置" class="headerlink" title="重新载入网络配置"></a>重新载入网络配置</h1><p>运行如下命令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/etc/init.d/networking restart</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决 Manjaro 系统无法驱动 8821CE 无线网卡</title>
+    <url>/article/2020/07/1b74acb8d81d.html</url>
+    <content><![CDATA[<h1 id="查看网卡型号和驱动状态"><a href="#查看网卡型号和驱动状态" class="headerlink" title="查看网卡型号和驱动状态"></a>查看网卡型号和驱动状态</h1><p>首先通过命令 <code>lspci -k | grep Wireless</code> 看一下原因是否为缺少 wifi 驱动，如下，如果没有 Kernel driver in use，说明缺少驱动。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">05:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8821CE 802.11ac PCIe Wireless Network Adapter</span><br><span class="line">        Subsystem: Lenovo RTL8821CE 802.11ac PCIe Wireless Network Adapter</span><br><span class="line">        Kernel driver in use: rtl8821ce</span><br><span class="line">        Kernel modules: 8821ce</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h1 id="安装无线网卡驱动"><a href="#安装无线网卡驱动" class="headerlink" title="安装无线网卡驱动"></a>安装无线网卡驱动</h1><p>接着就是安装对应的网卡驱动，这里要比较注意的是系统本身的版本问题，查看系统的内核与系统的内核的headers的版本是否对应。如果不对应，升级到对应的版本，因为在安装驱动时，会检查内核与和headers的版本，如果不适配，无法安装驱动。不过这里如果升级了内核需要注意，一些软件，包之类的可能需要重启才能使用。例如我在升级内核版本时，系统一些软件和系统设置都出现了中文乱码及显示错误信息的情况。然后使用使用 yay 下载驱动。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo pacman -S manjaro-firmware # 不确定是否必要</span><br><span class="line">sudo pacman -S yay</span><br><span class="line">yay -S rtl8821ce-dkms-git</span><br><span class="line">sudo pacman -S linux419-headers # 这里需要选择对应内核</span><br><span class="line">sudo modprobe 8821ce</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：如果在 <code>yay -S rtl8821ce-dkms-git</code> 这一步遇到了权限不足，需要加上 -force 参数来强制下载。</p>
+</blockquote>
+<p>如果以上过程都成功的话，现在应该已经可以在网络中看到开启 wifi 的选项了。</p>
+]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Manjaro</tag>
+        <tag>Debug</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo 添加分类及标签</title>
+    <url>/article/2020/07/5dbde1ea002e.html</url>
+    <content><![CDATA[<blockquote>
+<p>生成的新文件夹都在source下也就是和放文章的文件夹一块<br>以下所有命令都是在博客文件目录下执行</p>
+</blockquote>
+<h1 id="创建“分类”选项"><a href="#创建“分类”选项" class="headerlink" title="创建“分类”选项"></a>创建“分类”选项</h1><p>生成“分类”页并添加tpye属性,进入博客目录。执行命令下方命令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hexo new page categories</span></span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>categories文件夹下会有index.md这个文件，打开后默认内容是这样的：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line"><span class="section">date: 2019-04-22 14:47:40</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+
+<p>添加type: “categories”到内容中，添加后是这样的：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: 分类</span><br><span class="line">date: 2019-04-24 15:30:30</span><br><span class="line"><span class="section">type: categories</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+
+<p>保存并关闭文件。 </p>
+<p>给文章添加“categories”属性 </p>
+<p>打开需要添加分类的文章，为其添加categories属性。下方的categories:Hexo表示这篇文章添加到到“Hexo”这个分类。注意：一篇文章只会添加到一个分类中，如果是多个默认放到第一个分类中。 </p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hexo 添加分类及标签</span><br><span class="line">date: 2017-05-26 12:12:57</span><br><span class="line"><span class="section">categories: Hexo</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+
+<p>至此，成功给文章添加分类，点击首页的“分类”可以看到该分类下的所有文章。当然，只有添加了categories: xxx的文章才会被收录到首页的“分类”中。</p>
+<h1 id="创建“标签”选项"><a href="#创建“标签”选项" class="headerlink" title="创建“标签”选项"></a>创建“标签”选项</h1><p>生成“标签”页并添加tpye属性</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hexo new page tags</span></span><br></pre></td></tr></table></figure>
+
+<p>在tags文件夹下，找到index.md这个文件，打开后默认内容是这样的：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: 标签</span><br><span class="line"><span class="section">date: 2019-04-22 14:22:08</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+
+<p>添加type: “tags”到内容中，添加后是这样的：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: 标签</span><br><span class="line">date: 2019-04-24 15:40:24</span><br><span class="line"><span class="section">type: tags</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+
+<p>保存并关闭文件。</p>
+<p>给文章添加“tags”属性,打开需要添加标签的文章，为其添加tags属性。</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hexo 添加分类及标签</span><br><span class="line">date: 2019-04-24 15:40:24</span><br><span class="line">categories: </span><br><span class="line"><span class="bullet">           -</span> Hexo</span><br><span class="line">tags:</span><br><span class="line"><span class="section">           - 博客</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Debian9 启动后进入命令行</title>
+    <url>/article/2020/07/cbba321cc89b.html</url>
+    <content><![CDATA[<h1 id="打开-default-grub-配置"><a href="#打开-default-grub-配置" class="headerlink" title="打开 default grub 配置"></a>打开 default grub 配置</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo vi /etc/default/grub</span></span><br></pre></td></tr></table></figure>
+
+<p>修改以下3处内容</p>
+<ol>
+<li>找到行 <code>GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet&quot;</code>，加#注释掉这一行配置</li>
+<li>找到行 <code>GRUB_CMDLINE_LINUX=&quot;&quot;</code>，修改为 <code>GRUB_CMDLINE_LINUX=&quot;text&quot;</code></li>
+<li>找到行 <code>#GRUB_TERMINAL=console</code>，去掉#注释</li>
+</ol>
+<span id="more"></span>
+
+<p>保存修改</p>
+<h1 id="更新-grub-配置"><a href="#更新-grub-配置" class="headerlink" title="更新 grub 配置"></a>更新 grub 配置</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo update-grub</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="设置为多用户（命令行）启动"><a href="#设置为多用户（命令行）启动" class="headerlink" title="设置为多用户（命令行）启动"></a>设置为多用户（命令行）启动</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo systemctl set-default multi-user.target</span></span><br></pre></td></tr></table></figure>
+
+<p>进入命令行界面，输入 startx 命令就可以打开图形界面</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo startx</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>从图形界面切换到命令行界面，可以通过组合键 Ctrl + Alt + F2……F6<br>如果要重新修改为图形界面启动<br>还原grub文件中修改的3处内容  </p>
+</blockquote>
+<h1 id="设置图形界面启动"><a href="#设置图形界面启动" class="headerlink" title="设置图形界面启动"></a>设置图形界面启动</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo systemctl set-default graphical.target</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>开发&amp;技术</category>
+      </categories>
+      <tags>
+        <tag>Debian</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+</search>

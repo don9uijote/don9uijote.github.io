@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/static/css/all.min.css">
+<link rel="stylesheet" href="/static/css/animate.min.css">
+
+<script src="/static/js/anime.min.js"></script>
+<script src="/static/js/search.js"></script>
+
+
+
+
+  
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ihacker.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="0x00 环境&amp;常用1. 环境软件 JDK 1.8 Apache 2.4 PHP 7.2 MySQL 5.7  2. 基础软件 服务器系统：OpenEuler 终端进程保持工具：nohup 编辑工具：vim 解压工具：tar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux下JDK+Apache+PHP+MySQL环境搭建和项目部署记录">
+<meta property="og:url" content="https://ihacker.top/article/2025/08/2e23749be746.html">
+<meta property="og:site_name" content="Q&#39;s Garret">
+<meta property="og:description" content="0x00 环境&amp;常用1. 环境软件 JDK 1.8 Apache 2.4 PHP 7.2 MySQL 5.7  2. 基础软件 服务器系统：OpenEuler 终端进程保持工具：nohup 编辑工具：vim 解压工具：tar">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-26T02:27:00.000Z">
+<meta property="article:modified_time" content="2026-08-19T03:57:05.870Z">
+<meta property="article:author" content="Mr.Q">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ihacker.top/article/2025/08/2e23749be746.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://ihacker.top/article/2025/08/2e23749be746.html","path":"article/2025/08/2e23749be746.html","title":"Linux下JDK+Apache+PHP+MySQL环境搭建和项目部署记录"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux下JDK+Apache+PHP+MySQL环境搭建和项目部署记录 | Q's Garret</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Q's Garret</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Who Am I?</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-collects"><a href="/collects/" rel="section"><i class="fa fa-star fa-fw"></i>收藏</a></li><li class="menu-item menu-item-applications"><a href="/applications/" rel="section"><i class="fa fa-flask fa-fw"></i>程序</a></li><li class="menu-item menu-item-links"><a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>链接</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-%E7%8E%AF%E5%A2%83-amp-%E5%B8%B8%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">0x00 环境&amp;常用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%8E%AF%E5%A2%83%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">1. 环境软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%9F%BA%E7%A1%80%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">2. 基础软件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-%E5%AE%89%E8%A3%85JDK"><span class="nav-number">2.</span> <span class="nav-text">0x01 安装JDK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%89%E8%A3%85OpenJDK"><span class="nav-number">2.1.</span> <span class="nav-text">一、命令行安装OpenJDK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85%E7%BB%93%E6%9E%9C"><span class="nav-number">2.2.</span> <span class="nav-text">二、验证安装结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-Apache%E5%AE%89%E8%A3%85%E5%92%8C%E8%BF%90%E8%A1%8C"><span class="nav-number">3.</span> <span class="nav-text">0x02 Apache安装和运行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%8C%85%E7%B4%A2%E5%BC%95%EF%BC%88%E9%9D%9E%E5%BF%85%E8%A6%81%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">一、更新系统包索引（非必要）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%89%E8%A3%85Apache%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">3.2.</span> <span class="nav-text">二、安装Apache服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%90%AF%E5%8A%A8Apache%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.3.</span> <span class="nav-text">三、启动Apache服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%AE%BE%E7%BD%AEApache%E6%9C%8D%E5%8A%A1%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="nav-number">3.4.</span> <span class="nav-text">四、设置Apache服务开机自启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%BC%96%E8%BE%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%89%80%E5%9C%A8%E8%B7%AF%E5%BE%84"><span class="nav-number">3.5.</span> <span class="nav-text">五、编辑配置文件所在路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">3.6.</span> <span class="nav-text">六、遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#systemd%E6%9C%8D%E5%8A%A1%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-code-x3D-exited-status-x3D-203-x2F-EXEC-%E9%94%99%E8%AF%AF"><span class="nav-number">3.6.1.</span> <span class="nav-text">systemd服务开机启动(code&#x3D;exited, status&#x3D;203&#x2F;EXEC)错误</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-MySQL%E5%AE%89%E8%A3%85%E5%92%8C%E8%BF%90%E8%A1%8C"><span class="nav-number">4.</span> <span class="nav-text">0x03 MySQL安装和运行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">4.1.</span> <span class="nav-text">一、准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9F%A5%E7%9C%8B%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%BD%8D%E6%95%B0"><span class="nav-number">4.1.1.</span> <span class="nav-text">1. 查看操作系统位数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E5%8C%85"><span class="nav-number">4.2.</span> <span class="nav-text">二、下载安装包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9C%AC%E5%9C%B0%E4%B8%8B%E8%BD%BD%E5%90%8E%E4%B8%8A%E4%BC%A0"><span class="nav-number">4.2.1.</span> <span class="nav-text">1. 本地下载后上传</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD"><span class="nav-number">4.2.2.</span> <span class="nav-text">2. 在服务器直接下载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%89%E8%A3%85MySQL"><span class="nav-number">4.3.</span> <span class="nav-text">三、安装MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%A7%A3%E5%8E%8B%E5%AE%89%E8%A3%85%E5%8C%85%E5%B9%B6%E7%A7%BB%E5%8A%A8%E5%92%8C%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">4.3.1.</span> <span class="nav-text">1. 解压安装包并移动和重命名文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%A3%80%E6%9F%A5MySQL%E7%BB%84%E5%92%8C%E7%94%A8%E6%88%B7%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8"><span class="nav-number">4.3.2.</span> <span class="nav-text">2. 检查MySQL组和用户是否存在</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%B7%BB%E5%8A%A0MySQL%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84"><span class="nav-number">4.3.3.</span> <span class="nav-text">3. 添加MySQL用户和用户组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%88%9B%E5%BB%BAdata%E7%9B%AE%E5%BD%95"><span class="nav-number">4.3.4.</span> <span class="nav-text">4. 创建data目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%9B%B4%E6%94%B9MySQL%E7%94%A8%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%BB%84%E6%9D%83%E9%99%90"><span class="nav-number">4.3.5.</span> <span class="nav-text">5. 更改MySQL用户、用户组权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%BC%96%E8%BE%91%E6%88%96%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.3.6.</span> <span class="nav-text">6. 编辑或创建配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%88%9D%E5%A7%8B%E5%8C%96MySQL"><span class="nav-number">4.3.7.</span> <span class="nav-text">7. 初始化MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E6%B5%8B%E8%AF%95%E5%90%AF%E5%8A%A8MySQL%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.3.8.</span> <span class="nav-text">8. 测试启动MySQL服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E6%B7%BB%E5%8A%A0%E8%BD%AF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%B9%B6%E9%87%8D%E5%90%AFMySQL%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.3.9.</span> <span class="nav-text">9. 添加软连接，并重启MySQL服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E7%99%BB%E5%BD%95MySQL"><span class="nav-number">4.3.10.</span> <span class="nav-text">10. 登录MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81%E3%80%81%E5%8F%96%E6%B6%88%E8%BF%87%E6%9C%9F"><span class="nav-number">4.3.11.</span> <span class="nav-text">11. 修改密码、取消过期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E5%BC%80%E6%94%BE%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.3.12.</span> <span class="nav-text">12. 开放远程连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8"><span class="nav-number">4.3.13.</span> <span class="nav-text">13. 设置开机自动启动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">4.4.</span> <span class="nav-text">四、遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%90%AF%E5%8A%A8%E6%8A%A5libncurses-so-5%E5%92%8Clibtinfo-so-5%E4%BE%9D%E8%B5%96%E7%BC%BA%E5%A4%B1%E9%97%AE%E9%A2%98"><span class="nav-number">4.4.1.</span> <span class="nav-text">1. 启动报libncurses.so.5和libtinfo.so.5依赖缺失问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Linux%E4%B8%8BMySQL%E5%8F%AA%E8%83%BD%E9%80%9A%E8%BF%87service%E5%90%AF%E5%8A%A8-%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87systemctl%E5%90%AF%E5%8A%A8"><span class="nav-number">4.4.2.</span> <span class="nav-text">2. Linux下MySQL只能通过service启动,无法通过systemctl启动</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-%E4%BB%8E%E6%BA%90%E4%BB%A3%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85PHP"><span class="nav-number">5.</span> <span class="nav-text">0x04 从源代码编译安装PHP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%8B%E8%BD%BD%E8%A7%A3%E5%8E%8B%E6%BA%90%E7%A0%81"><span class="nav-number">5.1.</span> <span class="nav-text">一、下载解压源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%E5%8C%85%E2%80%8C"><span class="nav-number">5.2.</span> <span class="nav-text">二、安装依赖包‌</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9"><span class="nav-number">5.3.</span> <span class="nav-text">三、配置编译选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85"><span class="nav-number">5.4.</span> <span class="nav-text">四、编译和安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%AA%8C%E8%AF%81PHP7-2%E5%AE%89%E8%A3%85%E7%BB%93%E6%9E%9C%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">5.5.</span> <span class="nav-text">五、验证PHP7.2安装结果并配置环境变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%E5%90%8E%EF%BC%8C%E9%AA%8C%E8%AF%81PHP%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="nav-number">5.5.1.</span> <span class="nav-text">1. 安装完成后，验证PHP是否安装成功</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">5.6.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98-1"><span class="nav-number">5.7.</span> <span class="nav-text">四、遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-php7%E7%BC%96%E8%AF%91%E5%90%8E%E6%B2%A1%E6%9C%89libphp7-so"><span class="nav-number">5.7.1.</span> <span class="nav-text">1. php7编译后没有libphp7.so</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-openEuler%E4%B8%8Bphp%E6%B2%A1%E6%9C%89openssl%E6%89%A9%E5%B1%95"><span class="nav-number">5.7.2.</span> <span class="nav-text">2. openEuler下php没有openssl扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-php%E7%BC%96%E8%AF%91%E7%BC%BA%E5%B0%91curl"><span class="nav-number">5.7.3.</span> <span class="nav-text">3. php编译缺少curl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-php%E7%BC%96%E8%AF%91%E7%BC%BA%E5%B0%91gd%E6%89%A9%E5%B1%95"><span class="nav-number">5.7.4.</span> <span class="nav-text">4. php编译缺少gd扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-php%E6%B7%BB%E5%8A%A0gd%E6%89%A9%E5%B1%95%E5%90%8E%E4%BB%8D%E7%84%B6%E6%8F%90%E7%A4%BA%E6%B2%A1%E6%9C%89imagettftext%E5%87%BD%E6%95%B0"><span class="nav-number">5.7.5.</span> <span class="nav-text">5. php添加gd扩展后仍然提示没有imagettftext函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%BC%BA%E5%B0%91bcmath%E6%89%A9%E5%B1%95"><span class="nav-number">5.7.6.</span> <span class="nav-text">6. 缺少bcmath扩展</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x05-%E6%B7%BB%E5%8A%A0-x2F-%E5%88%A0%E9%99%A4%E7%AB%AF%E5%8F%A3%E8%BF%87%E7%B3%BB%E7%BB%9F%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">6.</span> <span class="nav-text">0x05 添加&#x2F;删除端口过系统防火墙</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x06-%E5%AE%89%E8%A3%85FTP"><span class="nav-number">7.</span> <span class="nav-text">0x06 安装FTP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x07-%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2%E9%A1%B9%E7%9B%AE"><span class="nav-number">8.</span> <span class="nav-text">0x07 启动和停止项目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE"><span class="nav-number">8.1.</span> <span class="nav-text">一、启动项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%81%9C%E6%AD%A2%E9%A1%B9%E7%9B%AE%E8%BF%90%E8%A1%8C"><span class="nav-number">8.2.</span> <span class="nav-text">二、停止项目运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9F%A5%E8%AF%A2pid"><span class="nav-number">8.2.1.</span> <span class="nav-text">1. 查询pid</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%81%9C%E6%AD%A2%E7%A8%8B%E5%BA%8F"><span class="nav-number">8.2.2.</span> <span class="nav-text">2. 停止程序</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr.Q"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr.Q</p>
+  <div class="site-description" itemprop="description">I Don't Know!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://ihacker.top/article/2025/08/2e23749be746.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr.Q">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Q's Garret">
+      <meta itemprop="description" content="I Don't Know!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux下JDK+Apache+PHP+MySQL环境搭建和项目部署记录 | Q's Garret">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux下JDK+Apache+PHP+MySQL环境搭建和项目部署记录
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-26 10:27:00" itemprop="dateCreated datePublished" datetime="2025-08-26T10:27:00+08:00">2025-08-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-19 11:57:05" itemprop="dateModified" datetime="2026-08-19T11:57:05+08:00">2026-08-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E5%8F%91-%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">开发&技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="0x00-环境-amp-常用"><a href="#0x00-环境-amp-常用" class="headerlink" title="0x00 环境&amp;常用"></a>0x00 环境&amp;常用</h1><h2 id="1-环境软件"><a href="#1-环境软件" class="headerlink" title="1. 环境软件"></a>1. 环境软件</h2><ul>
+<li>JDK 1.8</li>
+<li>Apache 2.4</li>
+<li>PHP 7.2</li>
+<li>MySQL 5.7</li>
+</ul>
+<h2 id="2-基础软件"><a href="#2-基础软件" class="headerlink" title="2. 基础软件"></a>2. 基础软件</h2><ul>
+<li>服务器系统：OpenEuler</li>
+<li>终端进程保持工具：nohup</li>
+<li>编辑工具：vim</li>
+<li>解压工具：tar</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="0x01-安装JDK"><a href="#0x01-安装JDK" class="headerlink" title="0x01 安装JDK"></a>0x01 安装JDK</h1><h2 id="一、命令行安装OpenJDK"><a href="#一、命令行安装OpenJDK" class="headerlink" title="一、命令行安装OpenJDK"></a>一、命令行安装OpenJDK</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf install java-1.8.0-openjdk-devel</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二、验证安装结果"><a href="#二、验证安装结果" class="headerlink" title="二、验证安装结果"></a>二、验证安装结果</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># java -version  # 应显示 &quot;openjdk version 1.8.0_xxx&quot;</span></span><br><span class="line">[root@localhost ~]<span class="comment"># javac -version # 检查编译器是否安装</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="0x02-Apache安装和运行"><a href="#0x02-Apache安装和运行" class="headerlink" title="0x02 Apache安装和运行"></a>0x02 Apache安装和运行</h1><h2 id="一、更新系统包索引（非必要）"><a href="#一、更新系统包索引（非必要）" class="headerlink" title="一、更新系统包索引（非必要）"></a>一、更新系统包索引（非必要）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf update</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二、安装Apache服务器"><a href="#二、安装Apache服务器" class="headerlink" title="二、安装Apache服务器"></a>二、安装Apache服务器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf install httpd</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、启动Apache服务"><a href="#三、启动Apache服务" class="headerlink" title="三、启动Apache服务"></a>三、启动Apache服务</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># systemctl start httpd</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="四、设置Apache服务开机自启"><a href="#四、设置Apache服务开机自启" class="headerlink" title="四、设置Apache服务开机自启"></a>四、设置Apache服务开机自启</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># systemctl enable httpd</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="五、编辑配置文件所在路径"><a href="#五、编辑配置文件所在路径" class="headerlink" title="五、编辑配置文件所在路径"></a>五、编辑配置文件所在路径</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vim /etc/httpd/conf/httpd.conf</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="六、遇到的问题"><a href="#六、遇到的问题" class="headerlink" title="六、遇到的问题"></a>六、遇到的问题</h2><h3 id="systemd服务开机启动-code-x3D-exited-status-x3D-203-x2F-EXEC-错误"><a href="#systemd服务开机启动-code-x3D-exited-status-x3D-203-x2F-EXEC-错误" class="headerlink" title="systemd服务开机启动(code&#x3D;exited, status&#x3D;203&#x2F;EXEC)错误"></a>systemd服务开机启动(code&#x3D;exited, status&#x3D;203&#x2F;EXEC)错误</h3><p>出现 (code&#x3D;exited, status&#x3D;203&#x2F;EXEC)错误的原因，主要有以下几点：</p>
+<ul>
+<li>原因1 ：systemctl执行脚本时需要知道脚本的解释器</li>
+<li>原因2：目标目录的执行权限不够</li>
+<li>原因3：要执行的脚本编码格式不正确</li>
+<li>原因4：定义的workingdirectory路径有问题</li>
+</ul>
+<p>参考连接：定义服务开机启动code&#x3D;exited status&#x3D;203&#x2F;exec 错误 systemctl 自定义service执行shell脚本时报错code exited status 203 EXEC_(code&#x3D;exited, status&#x3D;203&#x2F;exec)-CSDN博客</p>
+<p>bug，以上问题都不是我出现问题的真正原因，我碰到的是 由于SELinux 开启安全模式（SELinux 主要作用就是最大限度地减小系统中服务进程可访问的资源）导致不能设置开机自启动service</p>
+<p>如何关闭 SELinux：两种办法，如果系统无法立刻关闭，建议先设置临时，同时也去修改配置文件关闭，待合适时机重启服务器</p>
+<p>临时关闭：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># getenforce   #查看selinux状态</span></span><br><span class="line">[root@localhost ~]<span class="comment"># setenforce 0  #临时关闭selinux</span></span><br><span class="line">[root@localhost ~]<span class="comment"># getenforce</span></span><br></pre></td></tr></table></figure>
+
+<p>永久关闭（需要重启）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vim /etc/selinux/config</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELINUX=enforcing 修改为  SELINUX=disabled</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x03-MySQL安装和运行"><a href="#0x03-MySQL安装和运行" class="headerlink" title="0x03 MySQL安装和运行"></a>0x03 MySQL安装和运行</h1><h2 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h2><h3 id="1-查看操作系统位数"><a href="#1-查看操作系统位数" class="headerlink" title="1. 查看操作系统位数"></a>1. 查看操作系统位数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># getconf LONG_BIT;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二、下载安装包"><a href="#二、下载安装包" class="headerlink" title="二、下载安装包"></a>二、下载安装包</h2><h3 id="1-本地下载后上传"><a href="#1-本地下载后上传" class="headerlink" title="1. 本地下载后上传"></a>1. 本地下载后上传</h3><p>下载地址：<a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/community/">https://downloads.mysql.com/archives/community/</a></p>
+<p>按如下进行选择：<br>Product Version（数据库版本）：5.7.44<br>Operating System（操作系统）：Linux - Generic (通用版)<br>OS Version（系统版本）：Linux - Generic (glibc 2.12) (x86, 64-bit)</p>
+<p>下载：mysql-5.7.44-linux-glibc2.12-x86_64.tar.gz</p>
+<h3 id="2-在服务器直接下载"><a href="#2-在服务器直接下载" class="headerlink" title="2. 在服务器直接下载"></a>2. 在服务器直接下载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># wget https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.44-linux-glibc2.12-x86_64.tar.gz</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、安装MySQL"><a href="#三、安装MySQL" class="headerlink" title="三、安装MySQL"></a>三、安装MySQL</h2><h3 id="1-解压安装包并移动和重命名文件夹"><a href="#1-解压安装包并移动和重命名文件夹" class="headerlink" title="1. 解压安装包并移动和重命名文件夹"></a>1. 解压安装包并移动和重命名文件夹</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># tar -xzvf mysql-5.7.44-linux-glibc2.12-x86_64.tar.gz</span></span><br><span class="line">[root@localhost ~]<span class="comment"># mv mysql-5.7.44-linux-glibc2.12-x86_64 /usr/local/mysql</span></span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<blockquote>
+<p>x：表示解压<br>z：表示压缩方式<br>v：显示解压过程<br>f：表示后面接文件，必须</p>
+</blockquote>
+<h3 id="2-检查MySQL组和用户是否存在"><a href="#2-检查MySQL组和用户是否存在" class="headerlink" title="2. 检查MySQL组和用户是否存在"></a>2. 检查MySQL组和用户是否存在</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cat /etc/group|grep mysql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cat /etc/password|grep mysql</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-添加MySQL用户和用户组"><a href="#3-添加MySQL用户和用户组" class="headerlink" title="3. 添加MySQL用户和用户组"></a>3. 添加MySQL用户和用户组</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># groupadd mysql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -r -g mysql mysql</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-创建data目录"><a href="#4-创建data目录" class="headerlink" title="4. 创建data目录"></a>4. 创建data目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cd /usr/local/mysql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># mkdir data</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-更改MySQL用户、用户组权限"><a href="#5-更改MySQL用户、用户组权限" class="headerlink" title="5. 更改MySQL用户、用户组权限"></a>5. 更改MySQL用户、用户组权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># chown -R mysql:mysql /usr/local/mysql // 更改用户组及用户</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chmod -R 755 /usr/local/mysql // 更改权限</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-编辑或创建配置文件"><a href="#6-编辑或创建配置文件" class="headerlink" title="6. 编辑或创建配置文件"></a>6. 编辑或创建配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vim /etc/my.cnf</span></span><br></pre></td></tr></table></figure>
+
+<p>内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line">#character</span><br><span class="line">character-set-server=utf8</span><br><span class="line">collation-server=utf8_general_ci</span><br><span class="line">datadir=/usr/local/mysql/data</span><br><span class="line">port = 3306</span><br><span class="line">sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES</span><br><span class="line">symbolic-links=0</span><br><span class="line">max_connections=600</span><br><span class="line">innodb_file_per_table=1</span><br><span class="line">lower_case_table_names=1</span><br><span class="line"></span><br><span class="line">[mysqld_safe]</span><br><span class="line">datadir=/usr/local/mysql/data</span><br><span class="line">log-error=/usr/local/mysql/data/error.log</span><br><span class="line">pid-file=/usr/local/mysql/data/mysql.pid</span><br><span class="line">user=mysql</span><br><span class="line">tmpdir=/tmp</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-初始化MySQL"><a href="#7-初始化MySQL" class="headerlink" title="7. 初始化MySQL"></a>7. 初始化MySQL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cd /usr/local/mysql/bin</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ./mysqld --initialize --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="8-测试启动MySQL服务"><a href="#8-测试启动MySQL服务" class="headerlink" title="8. 测试启动MySQL服务"></a>8. 测试启动MySQL服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># /usr/local/mysql/support-files/mysql.server start</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="9-添加软连接，并重启MySQL服务"><a href="#9-添加软连接，并重启MySQL服务" class="headerlink" title="9. 添加软连接，并重启MySQL服务"></a>9. 添加软连接，并重启MySQL服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ln -s /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ln -s /usr/local/mysql/bin/mysql /usr/bin/mysql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># service mysql restart</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="10-登录MySQL"><a href="#10-登录MySQL" class="headerlink" title="10. 登录MySQL"></a>10. 登录MySQL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mysql -u root -p</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="11-修改密码、取消过期"><a href="#11-修改密码、取消过期" class="headerlink" title="11. 修改密码、取消过期"></a>11. 修改密码、取消过期</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">alter</span> <span class="keyword">user</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified <span class="keyword">by</span> <span class="string">&#x27;Root@123456&#x27;</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">update</span> mysql.user <span class="keyword">set</span> authentication_string <span class="operator">=</span><span class="operator">=</span> password(<span class="string">&#x27;用户密码&#x27;</span>), password_expired<span class="operator">=</span><span class="string">&#x27;N&#x27;</span> <span class="keyword">where</span> <span class="keyword">user</span> <span class="operator">=</span> <span class="string">&#x27;root&#x27;</span></span><br><span class="line">mysql<span class="operator">&gt;</span> flush privileges;</span><br><span class="line">mysql<span class="operator">&gt;</span> quit;</span><br></pre></td></tr></table></figure>
+
+<h3 id="12-开放远程连接"><a href="#12-开放远程连接" class="headerlink" title="12. 开放远程连接"></a>12. 开放远程连接</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> use mysql;　</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">update</span> <span class="keyword">user</span> <span class="keyword">set</span> user.Host<span class="operator">=</span><span class="string">&#x27;%&#x27;</span> <span class="keyword">where</span> user.User<span class="operator">=</span><span class="string">&#x27;root&#x27;</span>;　　　　　　</span><br><span class="line">mysql<span class="operator">&gt;</span> flush privileges;</span><br><span class="line">mysql<span class="operator">&gt;</span> quit;</span><br></pre></td></tr></table></figure>
+
+<p><code>service mysql restart</code>重启MySQL服务</p>
+<h3 id="13-设置开机自动启动"><a href="#13-设置开机自动启动" class="headerlink" title="13. 设置开机自动启动"></a>13. 设置开机自动启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld // 将服务文件拷贝到init.d下，并重命名为mysql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chmod +x /etc/init.d/mysqld // 赋予可执行权限</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chkconfig --add mysqld // 添加服务</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chkconfig --list // 显示服务列表</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="四、遇到的问题"><a href="#四、遇到的问题" class="headerlink" title="四、遇到的问题"></a>四、遇到的问题</h2><h3 id="1-启动报libncurses-so-5和libtinfo-so-5依赖缺失问题"><a href="#1-启动报libncurses-so-5和libtinfo-so-5依赖缺失问题" class="headerlink" title="1. 启动报libncurses.so.5和libtinfo.so.5依赖缺失问题"></a>1. 启动报libncurses.so.5和libtinfo.so.5依赖缺失问题</h3><p>在欧拉操作系统 openEuler 上新安装的MySQL 5.7在启动时遇到了依赖库文件libncurses.so.5 和 libtinfo.so.5 找不到的两个错误。经过检查发现系统中并不存在这两个库的指定版本，但存在更高版本的库文件。</p>
+<p>首先，尝试解决libncurses库文件缺失的问题。通过以下命令可以搜索系统中已有的libncurses版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># find / -name &#x27;libncurses*&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，系统已安装的是libncurses.so.6版本。解决方法是创建一个指向高版本库文件的软链接，模拟出libncurses.so.5依赖。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ln -s /usr/lib64/libncurses.so.6 /usr/lib64/libncurses.so.5</span></span><br></pre></td></tr></table></figure>
+
+<p>解决了libncurses.so.5的问题后，再次尝试启动MySQL时，出现了新的错误，关于libtinfo.so.5文件缺失。我们同样通过搜索，查看系统中是否存在libtinfo的其他版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># find / -name &#x27;libtinfo.so*&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>同前面的处理方法，创建一个指向libtinfo.so.6的软链接来解决问题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ln -s /usr/lib64/libtinfo.so.6 /usr/lib64/libtinfo.so.5</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Linux下MySQL只能通过service启动-无法通过systemctl启动"><a href="#2-Linux下MySQL只能通过service启动-无法通过systemctl启动" class="headerlink" title="2. Linux下MySQL只能通过service启动,无法通过systemctl启动"></a>2. Linux下MySQL只能通过service启动,无法通过systemctl启动</h3><p>创建或更新systemd服务文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf install mysql-server</span></span><br></pre></td></tr></table></figure>
+
+<p>如果重新安装后仍然没有生成systemd服务文件，可以手动创建一个mysql.service文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vim /etc/systemd/system/mysql.service</span></span><br></pre></td></tr></table></figure>
+
+<p>添加以下内容</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=MySQL Server</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"> </span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">User</span>=mysql</span><br><span class="line"><span class="attr">Group</span>=mysql</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/bin/mysqld_safe --defaults-file=/etc/my.cnf</span><br><span class="line"><span class="attr">ExecStop</span>=/usr/bin/mysqladmin shutdown</span><br><span class="line"><span class="attr">Restart</span>=<span class="literal">on</span>-failure</span><br><span class="line"><span class="attr">PrivateTmp</span>=<span class="literal">true</span></span><br><span class="line"> </span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>确保路径和用户根据实际情况修改，然后重新加载systemd配置并尝试启动服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># systemctl daemon-reload</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl start mysql.service</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl enable mysql.service</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="0x04-从源代码编译安装PHP"><a href="#0x04-从源代码编译安装PHP" class="headerlink" title="0x04 从源代码编译安装PHP"></a>0x04 从源代码编译安装PHP</h1><h2 id="一、下载解压源码"><a href="#一、下载解压源码" class="headerlink" title="一、下载解压源码"></a>一、下载解压源码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># https://www.php.net/distributions/php-7.2.9.tar.gz</span></span><br><span class="line">[root@localhost ~]<span class="comment"># tar -zxvf php-7.2.9.tar.gz</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二、安装依赖包‌"><a href="#二、安装依赖包‌" class="headerlink" title="二、安装依赖包‌"></a>二、安装依赖包‌</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf install -y gcc gcc-c++ autoconf make libxml2-devel bzip2-devel libmcrypt-devel openssl-devel libcurl-devel libpng-devel libjpeg-devel freetype-devel</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、配置编译选项"><a href="#三、配置编译选项" class="headerlink" title="三、配置编译选项"></a>三、配置编译选项</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost php-7.2.9.tar.gz]<span class="comment"># ./configure --prefix=/usr/local/php-7.2.9 --with-config-file-path=/usr/local/php-7.2.9/etc --with-mysqli --with-pdo-mysql --enable-fpm --enable-mbstring --enable-zip --enable-opcache --with-apxs2 --with-openssl --with-curl --with-gd --with-freetype-dir --with-jpeg-dir=/usr/lib --with-png-dir=/usr/lib --enable-bcmath</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="四、编译和安装"><a href="#四、编译和安装" class="headerlink" title="四、编译和安装"></a>四、编译和安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost php-7.2.9.tar.gz]<span class="comment"># make &amp;&amp; make install</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="五、验证PHP7-2安装结果并配置环境变量"><a href="#五、验证PHP7-2安装结果并配置环境变量" class="headerlink" title="五、验证PHP7.2安装结果并配置环境变量"></a>五、验证PHP7.2安装结果并配置环境变量</h2><h3 id="1-安装完成后，验证PHP是否安装成功"><a href="#1-安装完成后，验证PHP是否安装成功" class="headerlink" title="1. 安装完成后，验证PHP是否安装成功"></a>1. 安装完成后，验证PHP是否安装成功</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># /usr/local/php-7.2.9/bin/php -v</span></span><br></pre></td></tr></table></figure>
+
+<p>如果输出显示PHP7.2的版本信息，说明安装成功。</p>
+<p>你可能还需要将 PHP 的可执行文件路径添加到系统的环境变量中，以便在命令行中更方便地使用 PHP。编辑你的 shell 配置（如 .bashrc 或 .bash_profile），添加以下行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=&quot;/usr/local/php-7.2.9/bin:$PATH&quot;</span><br></pre></td></tr></table></figure>
+
+<p>然后，重新加载配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># source ~/.bashrc</span></span><br></pre></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="四、遇到的问题-1"><a href="#四、遇到的问题-1" class="headerlink" title="四、遇到的问题"></a>四、遇到的问题</h2><h3 id="1-php7编译后没有libphp7-so"><a href="#1-php7编译后没有libphp7-so" class="headerlink" title="1. php7编译后没有libphp7.so"></a>1. php7编译后没有libphp7.so</h3><p>Apache默认加载的libphp5.so这时需要指定libphp7.so但是configur不生成libphp7.so因此需要再加一个选项<code>--with-apxs2</code></p>
+<p>提示apxs2未安装，需要<code>dnf install httpd-devel</code>来解决</p>
+<p>编译好，并在httpd.conf中添加扩展加载</p>
+<h3 id="2-openEuler下php没有openssl扩展"><a href="#2-openEuler下php没有openssl扩展" class="headerlink" title="2. openEuler下php没有openssl扩展"></a>2. openEuler下php没有openssl扩展</h3><p>需要重新编译php，在编译配置时加入<code>--with-openssl</code>选项</p>
+<p>需要安装<code>dnf install openssl-devel</code></p>
+<h3 id="3-php编译缺少curl"><a href="#3-php编译缺少curl" class="headerlink" title="3. php编译缺少curl"></a>3. php编译缺少curl</h3><p>首先，确保系统上安装了libcurl开发库，可以通过包管理器来安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf install libcurl-devel</span></span><br></pre></td></tr></table></figure>
+
+<p>在编译配置中加入<code>--with-curl</code>选项</p>
+<h3 id="4-php编译缺少gd扩展"><a href="#4-php编译缺少gd扩展" class="headerlink" title="4. php编译缺少gd扩展"></a>4. php编译缺少gd扩展</h3><p>安装php-gd开发库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf install php-gd libpng libpng-devel libjpeg libjpeg-devel libwebp libwebp-devel</span></span><br></pre></td></tr></table></figure>
+
+<p>在编译配置中加入<code>--with-gd --with-jpeg-dir=/usr/lib --with-png-dir=/usr/lib</code>选项</p>
+<h3 id="5-php添加gd扩展后仍然提示没有imagettftext函数"><a href="#5-php添加gd扩展后仍然提示没有imagettftext函数" class="headerlink" title="5. php添加gd扩展后仍然提示没有imagettftext函数"></a>5. php添加gd扩展后仍然提示没有imagettftext函数</h3><p>安装freetype-devel库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf install freetype-devel</span></span><br></pre></td></tr></table></figure>
+
+<p>在编译配置中加入<code>--with-freetype-dir</code>选项</p>
+<h3 id="6-缺少bcmath扩展"><a href="#6-缺少bcmath扩展" class="headerlink" title="6. 缺少bcmath扩展"></a>6. 缺少bcmath扩展</h3><p>安装bcmath库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf install php-bcmath</span></span><br></pre></td></tr></table></figure>
+
+<p>在编译配置中加入<code>--enable-bcmath</code>选项</p>
+<h1 id="0x05-添加-x2F-删除端口过系统防火墙"><a href="#0x05-添加-x2F-删除端口过系统防火墙" class="headerlink" title="0x05 添加&#x2F;删除端口过系统防火墙"></a>0x05 添加&#x2F;删除端口过系统防火墙</h1><p>永久开启端口（以80端口为例）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># firewall-cmd --zone=public --add-port=80/tcp --permanent</span></span><br></pre></td></tr></table></figure>
+
+<p>永久关闭端口（以80端口为例）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># firewall-cmd --zone=public --remove-port=80/tcp --permanent </span></span><br></pre></td></tr></table></figure>
+
+<p>添加端口后，需要执行<code>firewall-cmd --reload</code>命令重新加载配置才能生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># firewall-cmd --reload</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="0x06-安装FTP"><a href="#0x06-安装FTP" class="headerlink" title="0x06 安装FTP"></a>0x06 安装FTP</h1><p>使用以下命令安装vsftpd</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dnf install vsftpd</span></span><br></pre></td></tr></table></figure>
+
+<p>备份默认配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cp /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak</span></span><br></pre></td></tr></table></figure>
+
+<p>创建用户和用户组，并为用户分配主目录（后续作为FTP目录）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># groupadd groupName</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -g groupName -d /path/www/html -m userName</span></span><br><span class="line">[root@localhost ~]<span class="comment"># passwd userName</span></span><br></pre></td></tr></table></figure>
+
+<p>编辑配置文件<code>/etc/vsftpd/vsftpd.conf</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">anonymous_enable=NO</span><br><span class="line">local_enable=YES</span><br><span class="line">write_enable=YES</span><br><span class="line">pam_service_name=vsftpd</span><br><span class="line">userlist_enable=YES</span><br><span class="line">userlist_deny=NO</span><br><span class="line">userlist_file=/etc/vsftpd/user_list</span><br><span class="line"></span><br><span class="line">pasv_min_port=30000</span><br><span class="line">pasv_max_port=31000</span><br></pre></td></tr></table></figure>
+
+<p>修改或查看用户主目录命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># getent passwd userName</span></span><br><span class="line">[root@localhost ~]<span class="comment"># usermod -d /new_path -m userName</span></span><br></pre></td></tr></table></figure>
+
+<p>设置目录访问权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># chown -R userName:userName /path/www/html</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chmod -R 755 /path/www/html</span></span><br></pre></td></tr></table></figure>
+
+<p>在<code>/etc/vsftpd/user_list</code>中添加ftp用户白名单用户</p>
+<p>启动服务并配置开机自启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># systemctl start vsftpd</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl enable vsftpd</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="0x07-启动和停止项目"><a href="#0x07-启动和停止项目" class="headerlink" title="0x07 启动和停止项目"></a>0x07 启动和停止项目</h1><h2 id="一、启动项目"><a href="#一、启动项目" class="headerlink" title="一、启动项目"></a>一、启动项目</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">nohup</span> java -jar run.jar &gt; run.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、停止项目运行"><a href="#二、停止项目运行" class="headerlink" title="二、停止项目运行"></a>二、停止项目运行</h2><h3 id="1-查询pid"><a href="#1-查询pid" class="headerlink" title="1. 查询pid"></a>1. 查询pid</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aux|grep run.jar|grep -v grep</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-停止程序"><a href="#2-停止程序" class="headerlink" title="2. 停止程序"></a>2. 停止程序</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> [pid]</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/article/2025/04/863a3a426114.html" rel="prev" title="《欢乐客栈》初版人物设定">
+                  <i class="fa fa-chevron-left"></i> 《欢乐客栈》初版人物设定
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/article/2025/09/b3302fe5446c.html" rel="next" title="openGauss6.0.2数据库安装详解">
+                  openGauss6.0.2数据库安装详解 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Q</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

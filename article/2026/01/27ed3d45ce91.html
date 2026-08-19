@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/static/css/all.min.css">
+<link rel="stylesheet" href="/static/css/animate.min.css">
+
+<script src="/static/js/anime.min.js"></script>
+<script src="/static/js/search.js"></script>
+
+
+
+
+  
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ihacker.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="0x01 安装工具123sudo dnf install vimsudo dnf install tarsudo dnf install gzip  0x02 安装和配置 MySQL 5.7一、 安装 MySQL 5.7.44 版本1. 添加 MySQL 官方 Yum 仓库12# 下载 MySQL 5.7 的官方 repo（适用于 RHEL 7&#x2F;8）sudo wget https:&#x2F;&#x2F;dev.my">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openEuler22.03 + MySQL5.7.44 + Apache2.4 + PHP7.2环境配置">
+<meta property="og:url" content="https://ihacker.top/article/2026/01/27ed3d45ce91.html">
+<meta property="og:site_name" content="Q&#39;s Garret">
+<meta property="og:description" content="0x01 安装工具123sudo dnf install vimsudo dnf install tarsudo dnf install gzip  0x02 安装和配置 MySQL 5.7一、 安装 MySQL 5.7.44 版本1. 添加 MySQL 官方 Yum 仓库12# 下载 MySQL 5.7 的官方 repo（适用于 RHEL 7&#x2F;8）sudo wget https:&#x2F;&#x2F;dev.my">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-01-28T15:17:00.000Z">
+<meta property="article:modified_time" content="2026-08-19T07:55:47.919Z">
+<meta property="article:author" content="Mr.Q">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ihacker.top/article/2026/01/27ed3d45ce91.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://ihacker.top/article/2026/01/27ed3d45ce91.html","path":"article/2026/01/27ed3d45ce91.html","title":"openEuler22.03 + MySQL5.7.44 + Apache2.4 + PHP7.2环境配置"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>openEuler22.03 + MySQL5.7.44 + Apache2.4 + PHP7.2环境配置 | Q's Garret</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Q's Garret</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Who Am I?</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-collects"><a href="/collects/" rel="section"><i class="fa fa-star fa-fw"></i>收藏</a></li><li class="menu-item menu-item-applications"><a href="/applications/" rel="section"><i class="fa fa-flask fa-fw"></i>程序</a></li><li class="menu-item menu-item-links"><a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>链接</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7"><span class="nav-number">1.</span> <span class="nav-text">0x01 安装工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE-MySQL-5-7"><span class="nav-number">2.</span> <span class="nav-text">0x02 安装和配置 MySQL 5.7</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81-%E5%AE%89%E8%A3%85-MySQL-5-7-44-%E7%89%88%E6%9C%AC"><span class="nav-number">2.1.</span> <span class="nav-text">一、 安装 MySQL 5.7.44 版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%B7%BB%E5%8A%A0-MySQL-%E5%AE%98%E6%96%B9-Yum-%E4%BB%93%E5%BA%93"><span class="nav-number">2.1.1.</span> <span class="nav-text">1. 添加 MySQL 官方 Yum 仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85-repo-%E5%8C%85"><span class="nav-number">2.1.2.</span> <span class="nav-text">2. 安装 repo 包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%90%AF%E7%94%A8-MySQL-5-7-%E4%BB%93%E5%BA%93%EF%BC%8C%E7%A6%81%E7%94%A8-8-0"><span class="nav-number">2.1.3.</span> <span class="nav-text">3. 启用 MySQL 5.7 仓库，禁用 8.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%9F%A5%E7%9C%8B-MySQL-5-7-%E5%8F%AF%E7%94%A8%E7%89%88%E6%9C%AC"><span class="nav-number">2.1.4.</span> <span class="nav-text">4. 查看 MySQL 5.7 可用版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%AE%89%E8%A3%85%E5%AF%B9%E5%BA%94%E7%89%88%E6%9C%AC"><span class="nav-number">2.1.5.</span> <span class="nav-text">5. 安装对应版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%90%AF%E5%8A%A8%E5%92%8C%E8%AE%BE%E7%BD%AE-MySQL-%E8%87%AA%E5%90%AF"><span class="nav-number">2.1.6.</span> <span class="nav-text">6. 启动和设置 MySQL 自启</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81-%E9%85%8D%E7%BD%AE-MySQL"><span class="nav-number">2.2.</span> <span class="nav-text">二、 配置 MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%8E%B7%E5%8F%96-root-%E8%B4%A6%E6%88%B7%E4%B8%B4%E6%97%B6%E5%AF%86%E7%A0%81"><span class="nav-number">2.2.1.</span> <span class="nav-text">1. 获取 root 账户临时密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%BF%90%E8%A1%8C%E5%AE%89%E5%85%A8%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.2.2.</span> <span class="nav-text">2. 运行安全初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%85%8D%E7%BD%AE-MySQL-%E8%B4%A6%E6%88%B7%E5%85%A8%E5%B1%80%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="nav-number">2.2.3.</span> <span class="nav-text">3. 配置 MySQL 账户全局访问权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BF%AE%E6%94%B9-etc-my-cnf-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.4.</span> <span class="nav-text">4. 修改 &#x2F;etc&#x2F;my.cnf 配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%85%8D%E7%BD%AE%E7%AB%AF%E5%8F%A3%E8%BF%87%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">2.2.5.</span> <span class="nav-text">5. 配置端口过防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%B7%BB%E5%8A%A0-SELinux-%E7%AB%AF%E5%8F%A3%E6%8E%88%E6%9D%83"><span class="nav-number">2.2.6.</span> <span class="nav-text">6. 添加 SELinux 端口授权</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-%E5%AE%89%E8%A3%85-JDK-1-8-0"><span class="nav-number">3.</span> <span class="nav-text">0x03 安装 JDK 1.8.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81-%E5%AE%89%E8%A3%85-OpenJDK-8"><span class="nav-number">3.1.</span> <span class="nav-text">一、 安装 OpenJDK 8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81-%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85"><span class="nav-number">3.2.</span> <span class="nav-text">二、 验证安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE-Apache-2-4"><span class="nav-number">4.</span> <span class="nav-text">0x04 安装和配置 Apache 2.4</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81-%E5%AE%89%E8%A3%85-Apache"><span class="nav-number">4.1.</span> <span class="nav-text">一、 安装 Apache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85-Apache-2-4"><span class="nav-number">4.1.1.</span> <span class="nav-text">1. 安装 Apache 2.4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85"><span class="nav-number">4.1.2.</span> <span class="nav-text">2. 验证安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="nav-number">4.2.</span> <span class="nav-text">3. 设置开机自启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81-%E9%85%8D%E7%BD%AE-Apache"><span class="nav-number">4.3.</span> <span class="nav-text">二、 配置 Apache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3"><span class="nav-number">4.3.1.</span> <span class="nav-text">1. 修改默认端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%85%8D%E7%BD%AE%E7%AB%AF%E5%8F%A3%E8%BF%87%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">4.3.2.</span> <span class="nav-text">2. 配置端口过防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%B7%BB%E5%8A%A0-SELinux-%E7%AB%AF%E5%8F%A3%E6%8E%88%E6%9D%83"><span class="nav-number">4.3.3.</span> <span class="nav-text">3. 添加 SELinux 端口授权</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x05-%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE-PHP-7-2-9"><span class="nav-number">5.</span> <span class="nav-text">0x05 安装和配置 PHP 7.2.9</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81-%E5%AE%89%E8%A3%85-PHP-7-2-9"><span class="nav-number">5.1.</span> <span class="nav-text">一、 安装 PHP 7.2.9</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91%E4%BE%9D%E8%B5%96"><span class="nav-number">5.1.1.</span> <span class="nav-text">1. 安装编译依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%8A%E4%BC%A0-php-7-2-9-tar-gz-%E5%8C%85%E5%B9%B6%E8%A7%A3%E5%8E%8B"><span class="nav-number">5.1.2.</span> <span class="nav-text">2. 上传 php-7.2.9.tar.gz 包并解压</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9%EF%BC%88%E4%B8%8E-Apache-%E9%9B%86%E6%88%90%EF%BC%89"><span class="nav-number">5.1.3.</span> <span class="nav-text">3. 配置编译选项（与 Apache 集成）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BC%96%E8%AF%91%E5%B9%B6%E5%AE%89%E8%A3%85"><span class="nav-number">5.1.4.</span> <span class="nav-text">4. 编译并安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81-%E9%85%8D%E7%BD%AE-PHP-%E7%8E%AF%E5%A2%83"><span class="nav-number">5.2.</span> <span class="nav-text">二、 配置 PHP 环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8B%B7%E8%B4%9D-PHP-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">5.2.1.</span> <span class="nav-text">1. 拷贝 PHP 配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%AA%8C%E8%AF%81-Apache-%E5%8A%A0%E8%BD%BD-PHP-%E6%A8%A1%E5%9D%97"><span class="nav-number">5.2.2.</span> <span class="nav-text">2. 验证 Apache 加载 PHP 模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%B7%BB%E5%8A%A0-php-%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90"><span class="nav-number">5.2.3.</span> <span class="nav-text">3. 添加 php 文件解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%B7%BB%E5%8A%A0-Apache-%E7%94%A8%E6%88%B7%E7%9B%AE%E5%BD%95%E6%93%8D%E4%BD%9C%E6%9D%83%E9%99%90"><span class="nav-number">5.2.4.</span> <span class="nav-text">4. 添加 Apache 用户目录操作权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%87%8D%E5%90%AF-httpd-%E6%9C%8D%E5%8A%A1%E4%BD%BF-PHP-%E6%A8%A1%E5%9D%97%E7%94%9F%E6%95%88"><span class="nav-number">5.2.5.</span> <span class="nav-text">5. 重启 httpd 服务使 PHP 模块生效</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x06-%E9%99%84%E5%BD%95%EF%BC%9AJAR-%E5%8C%85%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E6%89%A7%E8%A1%8C%E8%84%9A%E6%9C%AC"><span class="nav-number">6.</span> <span class="nav-text">0x06 附录：JAR 包后台运行执行脚本</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr.Q"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr.Q</p>
+  <div class="site-description" itemprop="description">I Don't Know!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://ihacker.top/article/2026/01/27ed3d45ce91.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr.Q">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Q's Garret">
+      <meta itemprop="description" content="I Don't Know!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="openEuler22.03 + MySQL5.7.44 + Apache2.4 + PHP7.2环境配置 | Q's Garret">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          openEuler22.03 + MySQL5.7.44 + Apache2.4 + PHP7.2环境配置
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-01-28 23:17:00" itemprop="dateCreated datePublished" datetime="2026-01-28T23:17:00+08:00">2026-01-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-19 15:55:47" itemprop="dateModified" datetime="2026-08-19T15:55:47+08:00">2026-08-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E5%8F%91-%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">开发&技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="0x01-安装工具"><a href="#0x01-安装工具" class="headerlink" title="0x01 安装工具"></a>0x01 安装工具</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install vim</span><br><span class="line">sudo dnf install tar</span><br><span class="line">sudo dnf install gzip</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x02-安装和配置-MySQL-5-7"><a href="#0x02-安装和配置-MySQL-5-7" class="headerlink" title="0x02 安装和配置 MySQL 5.7"></a>0x02 安装和配置 MySQL 5.7</h1><h2 id="一、-安装-MySQL-5-7-44-版本"><a href="#一、-安装-MySQL-5-7-44-版本" class="headerlink" title="一、 安装 MySQL 5.7.44 版本"></a>一、 安装 MySQL 5.7.44 版本</h2><h3 id="1-添加-MySQL-官方-Yum-仓库"><a href="#1-添加-MySQL-官方-Yum-仓库" class="headerlink" title="1. 添加 MySQL 官方 Yum 仓库"></a>1. 添加 MySQL 官方 Yum 仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载 MySQL 5.7 的官方 repo（适用于 RHEL 7/8）</span></span><br><span class="line">sudo wget https://dev.mysql.com/get/mysql80-community-release-el8-1.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<blockquote>
+<p>注意：这个包默认启用的是 MySQL 8.0，我们需要禁用 8.0 并启用 5.7。</p>
+</blockquote>
+<h3 id="2-安装-repo-包"><a href="#2-安装-repo-包" class="headerlink" title="2. 安装 repo 包"></a>2. 安装 repo 包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -ivh mysql80-community-release-el8-1.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-启用-MySQL-5-7-仓库，禁用-8-0"><a href="#3-启用-MySQL-5-7-仓库，禁用-8-0" class="headerlink" title="3. 启用 MySQL 5.7 仓库，禁用 8.0"></a>3. 启用 MySQL 5.7 仓库，禁用 8.0</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf config-manager --<span class="built_in">disable</span> mysql80-community</span><br><span class="line">sudo dnf config-manager --<span class="built_in">enable</span> mysql57-community</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果提示 dnf config-manager 未找到，请先安装 <code>sudo dnf install -y dnf-plugins-core</code></p>
+</blockquote>
+<h3 id="4-查看-MySQL-5-7-可用版本"><a href="#4-查看-MySQL-5-7-可用版本" class="headerlink" title="4. 查看 MySQL 5.7 可用版本"></a>4. 查看 MySQL 5.7 可用版本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf list mysql-community-server --showduplicates | grep 5.7</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-安装对应版本"><a href="#5-安装对应版本" class="headerlink" title="5. 安装对应版本"></a>5. 安装对应版本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install -y mysql-community-server-5.7.44</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-启动和设置-MySQL-自启"><a href="#6-启动和设置-MySQL-自启" class="headerlink" title="6. 启动和设置 MySQL 自启"></a>6. 启动和设置 MySQL 自启</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start mysqld</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> mysqld</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、-配置-MySQL"><a href="#二、-配置-MySQL" class="headerlink" title="二、 配置 MySQL"></a>二、 配置 MySQL</h2><h3 id="1-获取-root-账户临时密码"><a href="#1-获取-root-账户临时密码" class="headerlink" title="1. 获取 root 账户临时密码"></a>1. 获取 root 账户临时密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo grep <span class="string">&#x27;temporary password&#x27;</span> /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-运行安全初始化"><a href="#2-运行安全初始化" class="headerlink" title="2. 运行安全初始化"></a>2. 运行安全初始化</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mysql_secure_installation</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>输入临时密码，然后设置新密码</p>
+</blockquote>
+<blockquote>
+<p>需要外部访问时进行配置</p>
+</blockquote>
+<h3 id="3-配置-MySQL-账户全局访问权限"><a href="#3-配置-MySQL-账户全局访问权限" class="headerlink" title="3. 配置 MySQL 账户全局访问权限"></a>3. 配置 MySQL 账户全局访问权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> OPTION;</span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-修改-etc-my-cnf-配置文件"><a href="#4-修改-etc-my-cnf-配置文件" class="headerlink" title="4. 修改 /etc/my.cnf 配置文件"></a>4. 修改 <code>/etc/my.cnf</code> 配置文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bind-address = 0.0.0.0  # 监听外网端口</span><br><span class="line">port = 3306             # 配置数据库端口</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-配置端口过防火墙"><a href="#5-配置端口过防火墙" class="headerlink" title="5. 配置端口过防火墙"></a>5. 配置端口过防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --permanent --add-port=3306/tcp</span><br><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-添加-SELinux-端口授权"><a href="#6-添加-SELinux-端口授权" class="headerlink" title="6. 添加 SELinux 端口授权"></a>6. 添加 SELinux 端口授权</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo semanage port -a -t mysqld_port_t -p tcp 3307</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果修改默认端口需要添加授权，否则无法重新启动</p>
+</blockquote>
+<p>如果提示找不到 semanage 命令需进行安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install -y policycoreutils-python-utils</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x03-安装-JDK-1-8-0"><a href="#0x03-安装-JDK-1-8-0" class="headerlink" title="0x03 安装 JDK 1.8.0"></a>0x03 安装 JDK 1.8.0</h1><h2 id="一、-安装-OpenJDK-8"><a href="#一、-安装-OpenJDK-8" class="headerlink" title="一、 安装 OpenJDK 8"></a>一、 安装 OpenJDK 8</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、-验证安装"><a href="#二、-验证安装" class="headerlink" title="二、 验证安装"></a>二、 验证安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br><span class="line">javac -version</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x04-安装和配置-Apache-2-4"><a href="#0x04-安装和配置-Apache-2-4" class="headerlink" title="0x04 安装和配置 Apache 2.4"></a>0x04 安装和配置 Apache 2.4</h1><h2 id="一、-安装-Apache"><a href="#一、-安装-Apache" class="headerlink" title="一、 安装 Apache"></a>一、 安装 Apache</h2><h3 id="1-安装-Apache-2-4"><a href="#1-安装-Apache-2-4" class="headerlink" title="1. 安装 Apache 2.4"></a>1. 安装 Apache 2.4</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install -y httpd</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-验证安装"><a href="#2-验证安装" class="headerlink" title="2. 验证安装"></a>2. 验证安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpd -v</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-设置开机自启"><a href="#3-设置开机自启" class="headerlink" title="3. 设置开机自启"></a>3. 设置开机自启</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start httpd</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> httpd</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、-配置-Apache"><a href="#二、-配置-Apache" class="headerlink" title="二、 配置 Apache"></a>二、 配置 Apache</h2><h3 id="1-修改默认端口"><a href="#1-修改默认端口" class="headerlink" title="1. 修改默认端口"></a>1. 修改默认端口</h3><p>编辑 &#x2F;etc&#x2F;httpd&#x2F;conf&#x2F;httpd.conf 修改默认端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Listen 8080</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-配置端口过防火墙"><a href="#2-配置端口过防火墙" class="headerlink" title="2. 配置端口过防火墙"></a>2. 配置端口过防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --permanent --add-port=8080/tcp</span><br><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-添加-SELinux-端口授权"><a href="#3-添加-SELinux-端口授权" class="headerlink" title="3. 添加 SELinux 端口授权"></a>3. 添加 SELinux 端口授权</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo semanage port -a -t http_port_t -p tcp 8080</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x05-安装和配置-PHP-7-2-9"><a href="#0x05-安装和配置-PHP-7-2-9" class="headerlink" title="0x05 安装和配置 PHP 7.2.9"></a>0x05 安装和配置 PHP 7.2.9</h1><h2 id="一、-安装-PHP-7-2-9"><a href="#一、-安装-PHP-7-2-9" class="headerlink" title="一、 安装 PHP 7.2.9"></a>一、 安装 PHP 7.2.9</h2><h3 id="1-安装编译依赖"><a href="#1-安装编译依赖" class="headerlink" title="1. 安装编译依赖"></a>1. 安装编译依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install -y gcc make autoconf gcc-c++ libxml2-devel openssl-devel curl-devel libjpeg-devel libpng-devel freetype-devel bzip2-devel libzip-devel systemd-devel sqlite-devel oniguruma-devel</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-上传-php-7-2-9-tar-gz-包并解压"><a href="#2-上传-php-7-2-9-tar-gz-包并解压" class="headerlink" title="2. 上传 php-7.2.9.tar.gz 包并解压"></a>2. 上传 php-7.2.9.tar.gz 包并解压</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/src</span><br><span class="line"><span class="comment"># sudo wget https://www.php.net/distributions/php-7.2.9.tar.gz</span></span><br><span class="line">sudo tar -xzf php-7.2.9.tar.gz</span><br><span class="line"><span class="built_in">cd</span> php-7.2.9</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-配置编译选项（与-Apache-集成）"><a href="#3-配置编译选项（与-Apache-集成）" class="headerlink" title="3. 配置编译选项（与 Apache 集成）"></a>3. 配置编译选项（与 Apache 集成）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/php72 --with-config-file-path=/usr/local/php72/etc --with-config-file-scan-dir=/usr/local/php72/etc/conf.d --enable-fpm --with-fpm-user=apache --with-fpm-group=apache --with-apxs2=/usr/bin/apxs --with-openssl --with-zlib --with-curl --with-gd --with-jpeg-dir --with-png-dir --with-freetype-dir --enable-mbstring --enable-xml --enable-bcmath --enable-calendar --enable-exif --enable-ftp --enable-pcntl --enable-soap --enable-sockets --enable-zip --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果提示 apxs 未找到，请先安装 httpd-devel</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install -y httpd-devel</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-编译并安装"><a href="#4-编译并安装" class="headerlink" title="4. 编译并安装"></a>4. 编译并安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make -j</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、-配置-PHP-环境"><a href="#二、-配置-PHP-环境" class="headerlink" title="二、 配置 PHP 环境"></a>二、 配置 PHP 环境</h2><h3 id="1-拷贝-PHP-配置文件"><a href="#1-拷贝-PHP-配置文件" class="headerlink" title="1. 拷贝 PHP 配置文件"></a>1. 拷贝 PHP 配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> -p /usr/local/php72/etc/conf.d</span><br><span class="line">sudo <span class="built_in">cp</span> php.ini-production /usr/local/php72/etc/php.ini</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-验证-Apache-加载-PHP-模块"><a href="#2-验证-Apache-加载-PHP-模块" class="headerlink" title="2. 验证 Apache 加载 PHP 模块"></a>2. 验证 Apache 加载 PHP 模块</h3><p>检查 &#x2F;etc&#x2F;httpd&#x2F;conf&#x2F;httpd.conf 中是否包含 PHP 模块</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LoadModule php7_module modules/libphp7.so</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-添加-php-文件解析"><a href="#3-添加-php-文件解析" class="headerlink" title="3. 添加 php 文件解析"></a>3. 添加 php 文件解析</h3><p>添加以下内容以解析 .php 文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;FilesMatch \.php$ &gt;</span><br><span class="line">    SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改内容以识别 index.php 文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;IfModule dir_module&gt;</span><br><span class="line">    DirectoryIndex index.html index.php</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-添加-Apache-用户目录操作权限"><a href="#4-添加-Apache-用户目录操作权限" class="headerlink" title="4. 添加 Apache 用户目录操作权限"></a>4. 添加 Apache 用户目录操作权限</h3><p>避免 PHP 目录操作出现 <code>mkdir(): Permission denied</code> 报错，需为 Apache 用户添加目录权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">chown</span> -R apache:apache uploads</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-重启-httpd-服务使-PHP-模块生效"><a href="#5-重启-httpd-服务使-PHP-模块生效" class="headerlink" title="5. 重启 httpd 服务使 PHP 模块生效"></a>5. 重启 httpd 服务使 PHP 模块生效</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart httpd</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x06-附录：JAR-包后台运行执行脚本"><a href="#0x06-附录：JAR-包后台运行执行脚本" class="headerlink" title="0x06 附录：JAR 包后台运行执行脚本"></a>0x06 附录：JAR 包后台运行执行脚本</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">JAVA=&quot;java&quot;</span><br><span class="line">APP=&quot;app.jar&quot;</span><br><span class="line">OPT=&quot;&quot;</span><br><span class="line"></span><br><span class="line">running()&#123; </span><br><span class="line">    pid=`ps -ef|grep $APP|grep -v grep|awk &#x27;&#123;print $2&#125;&#x27;`</span><br><span class="line">    if [ -z &quot;$&#123;pid&#125;&quot; ]; then</span><br><span class="line">        return 1</span><br><span class="line">    else</span><br><span class="line">        return 0</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">start()&#123; </span><br><span class="line">    running </span><br><span class="line">    if [ $? -eq &quot;0&quot; ]; then </span><br><span class="line">        echo &quot;$&#123;APP&#125; is already running. pid=$&#123;pid&#125;&quot;</span><br><span class="line">    else </span><br><span class="line">        #nohup java $OPT -jar $APP &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">        nohup $JAVA $OPT -jar $APP &gt; app.log 2&gt;&amp;1 &amp;</span><br><span class="line">        echo &quot;$&#123;APP&#125; START success&quot;</span><br><span class="line">    fi</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">stop()&#123; </span><br><span class="line">    running </span><br><span class="line">    if [ $? -eq &quot;0&quot; ]; then</span><br><span class="line">        kill -9 $pid</span><br><span class="line">    echo &quot;$&#123;APP&#125; STOP success&quot;</span><br><span class="line">    else</span><br><span class="line">        echo &quot;$&#123;APP&#125; is NOT running&quot;</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">status()&#123; </span><br><span class="line">    running </span><br><span class="line">    if [ $? -eq &quot;0&quot; ]; then </span><br><span class="line">        echo &quot;$&#123;APP&#125; is running. Pid is $&#123;pid&#125;&quot; </span><br><span class="line">    else </span><br><span class="line">        echo &quot;$&#123;APP&#125; is NOT running.&quot; </span><br><span class="line">    fi </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">restart()&#123; </span><br><span class="line">    stop</span><br><span class="line">    start</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">usage() &#123; </span><br><span class="line">    echo &quot;Usage: sh run.sh [start|stop|restart|status]&quot; </span><br><span class="line">    exit 1 </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">case &quot;$1&quot; in </span><br><span class="line">    &quot;start&quot;) </span><br><span class="line">        start </span><br><span class="line">    ;; </span><br><span class="line">    &quot;stop&quot;) </span><br><span class="line">        stop </span><br><span class="line">    ;; </span><br><span class="line">    &quot;status&quot;) </span><br><span class="line">        status </span><br><span class="line">    ;; </span><br><span class="line">    &quot;restart&quot;) </span><br><span class="line">        restart </span><br><span class="line">    ;; </span><br><span class="line">    *) </span><br><span class="line">        usage </span><br><span class="line">    ;; </span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<p>设置 .sh 文件执行权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> +x run.sh</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/article/2025/09/c72b91b2495a.html" rel="prev" title="Ruoyi配置和使用双数据源（MySQL+SQLServer）">
+                  <i class="fa fa-chevron-left"></i> Ruoyi配置和使用双数据源（MySQL+SQLServer）
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Q</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
